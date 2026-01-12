@@ -1,0 +1,328 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+//   background: rgba(255, 255, 255, 0.31);
+//   backdrop-filter: blur(6px);
+  transition: all 0.3s ease-in-out;
+
+  /* Плавный переход для всех свойств */
+  &.scrolled {
+    transition: all 0.4s ease;
+
+    .right_side{
+        transition: all 0.4 ease;
+        backdrop-filter: blur(10px);
+        background: #00000050;
+    }
+  }
+}
+
+.mobile_logo_container {
+  margin-top: 50px;
+  width: 80%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  @media (max-width: 389px) {
+    margin-top: 20px;
+  }
+  @media (max-width: 375px) {
+    margin-top: 20px;
+  }
+}
+
+.inner {
+  margin: auto;
+  max-width: 1520px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  transition: padding 0.3s ease-in-out;
+
+  @media (max-width: 1530px) {
+    padding: 20px 2.5%;
+  }
+}
+
+/* Остальные стили остаются без изменений */
+.logo {
+  display: flex;
+  align-items: center;
+  img {
+    height: auto;
+    width: 90px;
+  }
+
+  @media (max-width: 1400px) {
+    img {
+      width: 180px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .logo img {
+      max-height: 40px;
+    }
+  }
+}
+
+.right_side{
+    height: 70px;
+    padding: 0px 8px 0px 40px;
+    display: flex;
+    border-radius: 999px;
+    justify-content: space-between;
+    background: #0000001A;
+    backdrop-filter: blur(40px);
+    transition: all 0.4s ease;
+}
+
+.nav {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+
+  a {
+    font-weight: 500;
+    color: #ffffff !important;
+    font-size: 18px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+
+
+    &:hover {
+      transform: scale(1.07); 
+      opacity: 0.95; 
+    }
+    
+    &:active {
+      transform: scale(0.98); 
+    }
+  }
+
+  @media (max-width: 992px) {
+    display: none;
+  }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  @media (max-width: 992px) {
+    display: none;
+  }
+}
+
+
+  .socials {
+    margin-left: 50px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    
+    .socialBtn {
+        height: 42px;
+        width: fit-content;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        text-decoration: none;
+        color: #4A4948;
+        transition: background 0.35s ease;
+        &:nth-child(1):hover {
+            background: rgba(255, 255, 255, 1);
+            .iconWrap {transform: translateX(100px);}
+            .text {transform: translateX(-48px);}
+        }
+        &:nth-child(2):hover {
+            background: rgba(255, 255, 255, 1);
+            .iconWrap {transform: translateX(58px);}
+            .text {transform: translateX(-48px);}
+        }
+    }
+
+        /* белый круг */
+        .iconWrap {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: #ffffff;
+
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+
+        transition: transform 0.35s ease;
+        }
+
+        /* текст */
+        .text {
+        font-size: 18px;
+        white-space: nowrap;
+
+        transition: transform 0.35s ease;
+        }
+  }
+
+.burger {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  padding: 10px;
+  margin-right: 10px;
+  cursor: pointer;
+
+  span {
+    width: 24px;
+    height: 3px;
+    background: #000; /* Белый цвет когда хедер прозрачный */
+    transition: background 0.3s ease-in-out;
+    z-index: 1002;
+  }
+
+  @media (max-width: 992px) {
+    display: flex;
+    z-index: 10000;
+  }
+}
+
+.mobileMenuOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0); /* полностью прозрачный изначально */
+  backdrop-filter: blur(0);
+  z-index: -1; /* скрыт за всем */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease, backdrop-filter 0.4s ease,
+    background-color 0.4s ease;
+}
+
+.mobileMenuOverlayActive {
+  z-index: 1001;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobileMenuActive {
+  opacity: 1;
+  transform: translateY(0);
+  backdrop-filter: blur(20px);
+}
+
+/* Мобильное меню */
+.mobileMenu {
+  background: rgb(255, 255, 255);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px); // для Safari
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 60px 20px 20px;
+  z-index: 1002;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow-y: auto;
+  opacity: 1;
+  transition: opacity 0.4s ease, transform 0.4s ease, backdrop-filter 0.4s ease;
+  color: #000; // базовый цвет текста
+
+  nav {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    margin-top: 50px;
+
+    a {
+      font-size: 22px;
+      color: #000; // явно задаём чёрный
+      text-decoration: none;
+      font-weight: 600;
+      opacity: 1;
+      &:hover {
+        transform: scale(1.07); 
+        opacity: 0.95; 
+      }
+    
+      &:active {
+        transform: scale(0.98); 
+      }
+    }
+
+    @media (max-width: 389px) {
+      margin-top: 30px;
+    }
+    @media (max-width: 375px) {
+      margin-top: 60px;
+    }
+  }
+
+  .mobileContacts {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    margin-top: 50px;
+
+    span {
+      font-size: 18px;
+      font-weight: 600;
+      color: #000;
+    }
+
+    .socials {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+      img {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  }
+}
+
+/* Изменение цвета бургера при скролле */
+.header.scrolled .burger span {
+  background: #000;
+}
+
+/* Изменение цвета навигации при скролле */
+.header.scrolled .nav a {
+  color: #000;
+}
+
+.header:not(.scrolled) .burger span {
+  background: #000; // или #fff, если фон тёмный
+}
+
+// Но если меню открыто — принудительно задать цвет
+#{&}.menuOpen .burger span {
+  background: #000 !important;
+}

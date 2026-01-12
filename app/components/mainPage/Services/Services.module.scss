@@ -1,0 +1,172 @@
+.services_header{
+    display: flex;
+    justify-content: space-between;
+
+    .CTA_button{
+        height: 50px;
+        width: 288px;
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        padding: 3px 7px;
+        border: 2px solid var(--button-color);
+        border-radius: 999px;
+        background: #FFFFFF;
+        color: var(--button-color);
+        text-decoration: none;
+        transition: background 0.4s ease;
+
+        .button_text{
+            font-size: 16px;
+            line-height: 1;
+            white-space: nowrap;
+            transition: transform 0.4s ease;
+        }
+
+        .button_icon{
+            width: 47px;
+            height: 47px;
+            border-radius: 50%;
+            background: var(--button-color);
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            transition: transform 0.4s ease;
+        }
+
+        .button_arrow{
+            width: 29px;
+            height: 29px;
+            color: #111;
+            transform: rotate(-45deg);
+            transition: transform 0.4s ease;
+        }
+
+        &:hover {
+            .button_icon {
+                transform: translateX(calc(288px - 47px));
+            }
+
+            .button_text {
+                transform: translateX(-70px);
+            }
+
+            .button_arrow {
+                transform: rotate(0deg);
+            }
+        }
+
+        &:active {
+            transform: translateY(1px);
+        }
+    }
+
+    
+}
+
+.services_Gallery{
+    width: 100%;
+    display: flex;
+    gap: 30px;
+    flex-direction: row;
+}
+
+.card_body{
+    --title-size: 24px;
+    --text-size: 16px;
+
+    padding: 15px;
+    width: calc(100% / 5 - 22.5px);
+    min-height: 700px; 
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative;
+    display: flex;
+    flex-direction: column; 
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+
+    &::before {
+        content: "";
+        border-radius: 20px;
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.6) 100%);
+        z-index: 1;
+        opacity: 1;
+        transition: opacity 0.4s ease;
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 20px;
+        background: linear-gradient(180deg,rgba(0, 0, 0, 0.2) 0%,rgba(0, 0, 0, 0.5) 100%);
+
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        z-index: 1;
+    }
+
+    > * {
+        position: relative;
+        z-index: 2;
+    }
+    
+    &.active {
+        --title-size: 40px;
+        --text-size: 24px;
+        transition: all 0.4s ease;
+        
+        &::before {opacity: 0;}
+        &::after {opacity: 1;}
+        width: calc((100% / 5) * 2 - 22.5px);
+        .button_arrow{
+            transform: rotate(0deg);
+        }
+    }
+
+    .button_icon{
+        position: absolute;
+        top:15px;
+        right: 15px;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: #FFFFFF1A;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        transition: transform 0.4s ease;
+    }
+
+    .button_arrow{
+        width: 40px;
+        height: 40px;
+        color: #111;
+        transform: rotate(-45deg);
+        transition: transform 0.4s ease;
+    }
+
+    .card_footer{
+        margin: auto 0 15px 0;
+    }
+
+    h3{
+        font-size: var(--title-size);
+        color: #FFFFFF;
+        margin-bottom: 20px;
+        transition: font-size 0.5s ease;
+    }
+
+    p{
+        font-size: var(--text-size);
+        color: #FFFFFF;
+        transition: font-size 0.5s ease;
+    }
+}

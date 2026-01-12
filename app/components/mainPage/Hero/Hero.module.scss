@@ -1,0 +1,97 @@
+.hero{
+    margin: 0;
+    background: url("/images/Hero.png") center / contain no-repeat;
+    min-height: 100vh;
+    background-size: cover;
+    position: relative;
+
+    .hero_container{
+        position: relative;
+        max-width: 1520px;
+        margin: 0 auto;
+        padding-top: 45vh;
+
+        h1{
+            margin: 0;
+            color: #ffffff;
+            text-shadow: 0px 0px 20px 0px #00000033;
+        }
+
+        .line {
+            margin: 30px 0;
+            width: 400px; 
+            height: 3px; 
+            background: var(--decor-color);
+            border-radius: 2px;
+        }
+
+        p{
+            margin: 30px 0 40px;
+            font-size: 36px;
+            color: #ffffff;
+            text-shadow: 0px 0px 20px 0px #00000033;
+        }
+
+        .CTA_button{
+            height: 80px;
+            width: 375px;
+            display: flex;
+            align-items: center;
+            gap: 35px;
+            padding: 5px 10px;
+            border: 2px solid #ffffff;
+            border-radius: 999px;
+            background: #FFFFFF0D;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: #ffffff;
+            text-decoration: none;
+            transition: background 0.4s ease;
+
+            .button_text{
+                font-size: 24px;
+                line-height: 1;
+                white-space: nowrap;
+                transition: transform 0.4s ease;
+            }
+
+            .button_icon{
+                width: 70px;
+                height: 70px;
+                border-radius: 50%;
+                background: #ffffff;
+                display: grid;
+                place-items: center;
+                flex-shrink: 0;
+                transition: transform 0.4s ease;
+            }
+
+            .button_arrow{
+                width: 40px;
+                height: 40px;
+                color: #111;
+                transform: rotate(-45deg);
+                transition: transform 0.4s ease;
+            }
+
+            &:hover {
+                .button_icon {
+                    transform: translateX(calc(375px - 44px - 24px));
+                }
+
+                .button_text {
+                    transform: translateX(-80px);
+                }
+
+                .button_arrow {
+                    transform: rotate(0deg);
+                }
+            }
+
+            &:active {
+                transform: translateY(1px);
+            }
+        }
+    }
+
+}
