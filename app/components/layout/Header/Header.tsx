@@ -1,145 +1,244 @@
-"use client";
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import styles from "./Header.module.scss";
+'use client';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { usePathname, useRouter } from 'next/navigation';
+import styles from './Header.module.scss';
 
 export default function Header() {
   const phone = process.env.NEXT_PUBLIC_CONTACT_PHONE;
+  const pathname = usePathname();
+  const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isPastHero, setIsPastHero] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      // Фон появляется когда страница прокручена больше чем на 50px
       const scrollTop = window.scrollY;
       setIsScrolled(scrollTop > 50);
+
+      // Проверяем, прошли ли мы Hero секцию
+      const heroElement = document.getElementById('hero');
+      if (heroElement) {
+        const heroBottom = heroElement.offsetTop + heroElement.offsetHeight;
+        setIsPastHero(scrollTop > heroBottom - 100);
+      }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    // Вызываем сразу для начального состояния
+    handleScroll();
+
+    window.addEventListener('scroll', handleScroll);
 
     // Очистка при размонтировании
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
     if (menuOpen) {
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = "";
+      document.body.style.overflow = '';
     }
 
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = '';
     };
   }, [menuOpen]);
-  
+
+  const handleLinkClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    if (href.startsWith('#')) {
+      e.preventDefault();
+      const targetId = href.substring(1);
+
+      // Если мы не на главной странице, переходим на главную с якорем
+      if (pathname !== '/') {
+        window.location.href = `/${href}`;
+        setMenuOpen(false);
+        return;
+      }
+
+      // Если мы на главной странице, скроллим к элементу
+      const targetElement = document.getElementById(targetId);
+
+      if (targetElement) {
+        const headerHeight = 100; // Высота хедера
+        const targetPosition = targetElement.offsetTop - headerHeight;
+
+        window.scrollTo({
+          top: targetPosition,
+          behavior: 'smooth',
+        });
+      }
+
+      setMenuOpen(false);
+    }
+  };
 
   return (
-    <header className={`${styles.header} ${ isScrolled && !menuOpen ? styles.scrolled : ""}`}>
-        {/* Остальной код без изменений */}
-        <div>
-            <div className={styles.inner}>
-                <Link href="/" className={styles.logo}>
-                    <Image
-                    src="/images/logo.png"
-                    alt="Логотип"
-                    width={80}
-                    height={80}
-                    priority
-                    />
-                </Link>
+    <header
+      className={`${styles.header} ${
+        isScrolled && !menuOpen ? styles.scrolled : ''
+      } ${isPastHero ? styles.pastHero : ''} ${
+        menuOpen ? styles.menuOpen : ''
+      }`}
+    >
+      {/* Остальной код без изменений */}
+      <div>
+        <div className={styles.inner}>
+          <Link href='/' className={styles.logo}>
+            <Image
+              src='/images/logo.png'
+              alt='Логотип'
+              width={80}
+              height={80}
+              priority
+            />
+          </Link>
 
-                {/* Навигация desktop */}
-                <div className={styles.right_side}>
-                    <nav className={styles.nav}>
-                        <Link href="/#about">Контакты</Link>
-                        <Link href="/#about">Цены</Link>
-                        <Link href="/#about">Портфолио</Link>
-                        <Link href="/#about">Услуги эвакуатора</Link>
-                        <Link href="/#about">Блог</Link>
-                        <Link href="/#products">О нас</Link>
-                        <Link href="/#services">Услуги</Link>
-                        <Link href="/#contacts">Тех помощь</Link>
-                    </nav>
+          {/* Навигация desktop */}
+          <div className={styles.right_side}>
+            <nav className={styles.nav}>
+              <Link href='/#form' onClick={(e) => handleLinkClick(e, '#form')}>
+                Услуги эвакуатора
+              </Link>
+              <Link
+                href='/#price'
+                onClick={(e) => handleLinkClick(e, '#price')}
+              >
+                Цены
+              </Link>
+              <Link
+                href='/#gallery'
+                onClick={(e) => handleLinkClick(e, '#gallery')}
+              >
+                Портфолио
+              </Link>
+              <Link
+                href='/#contacts'
+                onClick={(e) => handleLinkClick(e, '#contacts')}
+              >
+                Контакты
+              </Link>
+              <Link href='/#blog' onClick={(e) => handleLinkClick(e, '#blog')}>
+                Блог
+              </Link>
+              <Link
+                href='/#services'
+                onClick={(e) => handleLinkClick(e, '#services')}
+              >
+                О нас
+              </Link>
+              <Link
+                href='/#contacts'
+                onClick={(e) => handleLinkClick(e, '#contacts')}
+              >
+                Тех помощь
+              </Link>
+            </nav>
 
-                    {/* Контакты и кнопка */}
-                    <div className={styles.socials}>
-                        <Link
-                            href="https://m.vk.com/tridsat_dva"
-                            target="_blank"
-                            className={styles.socialBtn}
-                        >
-                            <span className={styles.iconWrap}>
-                            <Image
-                                src="/icons/tg.svg"
-                                alt="Telegram"
-                                width={42}
-                                height={42}
-                            />
-                            </span>
-                            <span className={styles.text}>Telegram</span>
-                        </Link>
+            {/* Контакты и кнопка */}
+            <div className={styles.socials}>
+              <div className={styles.socialBtn}>
+                <span className={styles.iconWrap}>
+                  <Image
+                    src='/icons/tg.svg'
+                    alt='Telegram'
+                    width={42}
+                    height={42}
+                  />
+                </span>
+                <span className={styles.text}>Telegram</span>
+              </div>
 
-                        <Link
-                            href="https://wa.me/79029830005"
-                            target="_blank"
-                            className={styles.socialBtn}
-                        >
-                            <span className={styles.iconWrap}>
-                            <Image
-                                src="/icons/max.svg"
-                                alt="MAX"
-                                width={42}
-                                height={42}
-                            />
-                            </span>
-                            <span className={styles.text}>MAX</span>
-                        </Link>
-                        </div>
+              <div className={styles.socialBtn}>
+                <span className={styles.iconWrap}>
+                  <Image
+                    src='/icons/max.svg'
+                    alt='MAX'
+                    width={42}
+                    height={42}
+                  />
+                </span>
+                <span className={styles.text}>MAX</span>
+              </div>
             </div>
-            
+          </div>
 
-            <button className={styles.burger} onClick={() => setMenuOpen(!menuOpen)}>
-                    <span />
-                    <span />
-                    <span />
-            </button>
-            </div>
+          <button
+            className={styles.burger}
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
         </div>
+      </div>
       {/* Мобильное меню */}
       <div
         className={`${styles.mobileMenuOverlay} ${
-          menuOpen ? styles.mobileMenuOverlayActive : ""
+          menuOpen ? styles.mobileMenuOverlayActive : ''
         }`}
         onClick={() => setMenuOpen(false)}
       >
         <div
           className={`${styles.mobileMenu} ${
-            menuOpen ? styles.mobileMenuActive : ""
+            menuOpen ? styles.mobileMenuActive : ''
           }`}
           onClick={(e) => e.stopPropagation()}
         >
           <Link
-            href="/"
+            href='/'
             onClick={() => setMenuOpen(false)}
             className={styles.mobile_logo_container}
           >
-            <img src="/svg/logo.svg" alt="" className={styles.mobile_logo} />
+            <Image
+              src='/images/logo.png'
+              alt='Логотип'
+              width={80}
+              height={80}
+              className={styles.mobile_logo}
+            />
           </Link>
           <nav>
-            <Link href="/#about" onClick={() => setMenuOpen(false)}>
-              О компании
+            <Link href='/#form' onClick={(e) => handleLinkClick(e, '#form')}>
+              Услуги эвакуатора
             </Link>
-            <Link href="/#products" onClick={() => setMenuOpen(false)}>
-              Продукция
+            <Link href='/#price' onClick={(e) => handleLinkClick(e, '#price')}>
+              Цены
             </Link>
-            <Link href="/#services" onClick={() => setMenuOpen(false)}>
-              Услуги
+            <Link
+              href='/#gallery'
+              onClick={(e) => handleLinkClick(e, '#gallery')}
+            >
+              Портфолио
             </Link>
-            <Link href="/#contacts" onClick={() => setMenuOpen(false)}>
+            <Link
+              href='/#contacts'
+              onClick={(e) => handleLinkClick(e, '#contacts')}
+            >
               Контакты
+            </Link>
+            <Link href='/#blog' onClick={(e) => handleLinkClick(e, '#blog')}>
+              Блог
+            </Link>
+            <Link
+              href='/#services'
+              onClick={(e) => handleLinkClick(e, '#services')}
+            >
+              О нас
+            </Link>
+            <Link
+              href='/#contacts'
+              onClick={(e) => handleLinkClick(e, '#contacts')}
+            >
+              Тех помощь
             </Link>
           </nav>
           <div className={styles.mobileContacts}>
@@ -147,22 +246,17 @@ export default function Header() {
               <span>{phone}</span>
             </Link>
             <div className={styles.socials}>
-              <Link href="https://m.vk.com/tridsat_dva" target="_blank">
+              <div>
                 <Image
-                  src="/svg/vk.svg"
-                  alt="whatsapp"
+                  src='/icons/tg.svg'
+                  alt='Telegram'
                   width={24}
                   height={24}
                 />
-              </Link>
-              <Link href="https://wa.me/79029830005" target="_blank">
-                <Image
-                  src="/svg/wa.svg"
-                  alt="whatsapp"
-                  width={24}
-                  height={24}
-                />
-              </Link>
+              </div>
+              <div>
+                <Image src='/icons/max.svg' alt='MAX' width={24} height={24} />
+              </div>
             </div>
           </div>
         </div>

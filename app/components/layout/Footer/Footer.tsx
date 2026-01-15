@@ -1,80 +1,139 @@
-import styles from "./Footer.module.scss"
-import Link from "next/link";
-import Image from "next/image";
+'use client';
+import styles from './Footer.module.scss';
+import Link from 'next/link';
+import Image from 'next/image';
+import { usePathname, useRouter } from 'next/navigation';
 
-export default function Footer(){
+export default function Footer() {
+  const email = 'evak-kemerovo@yandex.ru';
+  const phone = '+7(923)480-70-70';
+  const address = 'г.Кемерово, пр-кт Кузнецкий, 83, с. №2';
+  const addressLink = 'г.Кемерово, пр-кт Кузнецкий, 83, с. №2';
+  const pathname = usePathname();
+  const router = useRouter();
 
-    const email = "evak-kemerovo@yandex.ru";
-    const phone = "+7(923)480-70-70";
-    const address = "г.Кемерово, пр-кт Кузнецкий, 83, с. №2";
-    const addressLink = "г.Кемерово, пр-кт Кузнецкий, 83, с. №2";
+  const handleLinkClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    if (href.startsWith('#')) {
+      e.preventDefault();
+      const targetId = href.substring(1);
 
-    return(
-        <footer style={{backgroundColor:"#ffffff"}}>
-            <div className={styles.footer}>
+      // Если мы не на главной странице, переходим на главную с якорем
+      if (pathname !== '/') {
+        window.location.href = `/${href}`;
+        return;
+      }
 
-                <div className={styles.left_side}>
-                    <div className={styles.top}>
-                        <Link href="/" className={styles.logo}>
-                            <Image
-                            src="/images/logo.png"
-                            alt="Логотип"
-                            width={110}
-                            height={110}
-                            priority
-                            />
-                        </Link>
+      // Если мы на главной странице, скроллим к элементу
+      const targetElement = document.getElementById(targetId);
 
-                        <div className={styles.nav}>
-                            <Link href="/#about">Контакты</Link>
-                            <Link href="/#about">Цены</Link>
-                            <Link href="/#about">Портфолио</Link>
-                            <Link href="/#about">Услуги эвакуатора</Link>
-                            <Link href="/#about">Блог</Link>
-                            <Link href="/#products">О нас</Link>
-                            <Link href="/#services">Услуги</Link>
-                            <Link href="/#contacts">Тех помощь</Link>
-                        </div>
-                    </div>
+      if (targetElement) {
+        const headerHeight = 100;
+        const targetPosition = targetElement.offsetTop - headerHeight;
 
-                    <div className={styles.bottom}>
-                        <Link href="/#about">Политика конф</Link>
-                        <Link href="/#about">Условия пользования</Link>
-                    </div>
-                    
-                </div>
-                
+        window.scrollTo({
+          top: targetPosition,
+          behavior: 'smooth',
+        });
+      }
+    }
+  };
 
-                
+  return (
+    <footer style={{ backgroundColor: '#ffffff' }}>
+      <div className={styles.footer}>
+        <div className={styles.left_side}>
+          <div className={styles.top}>
+            <Link href='/' className={styles.logo}>
+              <Image
+                src='/images/logo.png'
+                alt='Логотип'
+                width={110}
+                height={110}
+                priority
+              />
+            </Link>
 
-                <div className={styles.right_side}>
-                    <div className={styles.links}>
-                        <Link href="https://m.vk.com/tridsat_dva" target="_blank">
-                            <Image
-                                className={styles.icon}
-                                src="/icons/tg-yellow.svg"
-                                alt="VK"
-                                width={42}
-                                height={42}
-                            />
-                        </Link>
-                        <Link href="https://wa.me/79029830005" target="_blank">
-                            <Image
-                                className={styles.icon}
-                                src="/icons/max-yellow.svg"
-                                alt="WhatsApp"
-                                width={42}
-                                height={42}
-                            />
-                        </Link>
-                    </div>
-                        <a href="">почта</a>
-                        <a href="">телефон</a>
-                        <a href="">адрес</a>
-
-                    
-                </div>
+            <div className={styles.nav}>
+              <Link href='/#form' onClick={(e) => handleLinkClick(e, '#form')}>
+                Услуги эвакуатора
+              </Link>
+              <Link
+                href='/#price'
+                onClick={(e) => handleLinkClick(e, '#price')}
+              >
+                Цены
+              </Link>
+              <Link
+                href='/#gallery'
+                onClick={(e) => handleLinkClick(e, '#gallery')}
+              >
+                Портфолио
+              </Link>
+              <Link
+                href='/#contacts'
+                onClick={(e) => handleLinkClick(e, '#contacts')}
+              >
+                Контакты
+              </Link>
+              <Link href='/#blog' onClick={(e) => handleLinkClick(e, '#blog')}>
+                Блог
+              </Link>
+              <Link
+                href='/#services'
+                onClick={(e) => handleLinkClick(e, '#services')}
+              >
+                О нас
+              </Link>
+              <Link
+                href='/#contacts'
+                onClick={(e) => handleLinkClick(e, '#contacts')}
+              >
+                Тех помощь
+              </Link>
             </div>
-        </footer>
-    );
+          </div>
+
+          <div className={styles.bottom}>
+            <Link href='/#about'>Политика конфиденциальности</Link>
+            <Link href='/#about'>Условия использования</Link>
+          </div>
+        </div>
+
+        <div className={styles.right_side}>
+          <div className={styles.links}>
+            <div>
+              <Image
+                className={styles.icon}
+                src='/icons/tg-yellow.svg'
+                alt='Telegram'
+                width={42}
+                height={42}
+              />
+            </div>
+            <div>
+              <Image
+                className={styles.icon}
+                src='/icons/max-yellow.svg'
+                alt='Max'
+                width={42}
+                height={42}
+              />
+            </div>
+          </div>
+          <a href={`mailto:${email}`}>{email}</a>
+          <a href={`tel:${phone}`}>{phone}</a>
+          <a
+            href={`https://yandex.ru/maps/?text=${encodeURIComponent(address)}`}
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            {address}
+          </a>
+        </div>
+      </div>
+    </footer>
+  );
 }
