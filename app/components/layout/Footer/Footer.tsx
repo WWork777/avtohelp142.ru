@@ -46,15 +46,9 @@ export default function Footer() {
       <div className={styles.footer}>
         <div className={styles.left_side}>
           <div className={styles.top}>
-            <Link href='/' className={styles.logo}>
-              <Image
-                src='/images/logo.png'
-                alt='Логотип'
-                width={110}
-                height={110}
-                priority
-              />
-            </Link>
+            {/* <Link href='/' className={styles.logo}>
+              <Image src='/images/logo.png' alt='Логотип' width={110} height={110} priority />
+            </Link> */}
 
             <div className={styles.nav}>
               <Link href='/#form' onClick={(e) => handleLinkClick(e, '#form')}>

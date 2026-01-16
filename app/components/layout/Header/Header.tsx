@@ -91,15 +91,9 @@ export default function Header() {
       {/* Остальной код без изменений */}
       <div>
         <div className={styles.inner}>
-          <Link href='/' className={styles.logo}>
-            <Image
-              src='/images/logo.png'
-              alt='Логотип'
-              width={80}
-              height={80}
-              priority
-            />
-          </Link>
+          {/* <Link href='/' className={styles.logo}>
+            <Image src='/images/logo.png' alt='Логотип' width={80} height={80} priority />
+          </Link> */}
 
           {/* Навигация desktop */}
           <div className={styles.right_side}>
@@ -198,7 +192,7 @@ export default function Header() {
           }`}
           onClick={(e) => e.stopPropagation()}
         >
-          <Link
+          {/* <Link
             href='/'
             onClick={() => setMenuOpen(false)}
             className={styles.mobile_logo_container}
@@ -210,7 +204,7 @@ export default function Header() {
               height={80}
               className={styles.mobile_logo}
             />
-          </Link>
+          </Link> */}
           <nav>
             <Link href='/#form' onClick={(e) => handleLinkClick(e, '#form')}>
               Услуги эвакуатора
