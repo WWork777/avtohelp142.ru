@@ -263,34 +263,36 @@
         }
       }
 
-      &:hover {
-        .button_icon {
-          transform: translateX(calc(375px - 80px - 10px));
-        }
-
-        .button_text {
-          transform: translateX(-80px);
-        }
-
-        .button_arrow {
-          transform: rotate(0deg);
-        }
-
-        @media (max-width: 1366px) {
+      @media (hover: hover) {
+        &:hover {
           .button_icon {
-            transform: translateX(calc(340px - 70px - 10px));
+            transform: translateX(calc(375px - 80px - 10px));
           }
-          .button_text {
-            transform: translateX(-70px);
-          }
-        }
 
-        @media (max-width: 992px) {
-          .button_icon {
-            transform: translateX(calc(100% - 60px - 8px));
-          }
           .button_text {
-            transform: translateX(-60px);
+            transform: translateX(-80px);
+          }
+
+          .button_arrow {
+            transform: rotate(0deg);
+          }
+
+          @media (max-width: 1366px) {
+            .button_icon {
+              transform: translateX(calc(340px - 70px - 10px));
+            }
+            .button_text {
+              transform: translateX(-70px);
+            }
+          }
+
+          @media (max-width: 992px) {
+            .button_icon {
+              transform: translateX(calc(100% - 60px - 8px));
+            }
+            .button_text {
+              transform: translateX(-60px);
+            }
           }
         }
       }

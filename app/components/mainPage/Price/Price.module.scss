@@ -2,263 +2,300 @@
   overflow: hidden;
 }
 
-.mySwiper{
-    overflow: visible;
-    padding-left: calc((100% - min(100%, 1520px)) / 2);
-    min-height: 600px;
+.mySwiper {
+  overflow: visible;
+  padding-left: calc((100% - min(100%, 1520px)) / 2);
+  min-height: 600px;
 
-    @media (max-width:1530px) {
-        padding-left: calc((100% - min(100%, 1500px)) / 2 + 2.5%); 
-    }
+  @media (max-width: 1530px) {
+    padding-left: calc((100% - min(100%, 1500px)) / 2 + 2.5%);
+  }
 
-    @media (max-width: 1440px) {
-        padding-left: calc((100% - min(100%, 1440px)) / 2 + 2.5%);
-        min-height: 580px;
-    }
+  @media (max-width: 1440px) {
+    padding-left: calc((100% - min(100%, 1440px)) / 2 + 2.5%);
+    min-height: 580px;
+  }
 
-    @media (max-width: 1366px) {
-        padding-left: calc((100% - min(100%, 1366px)) / 2 + 2.5%);
-        min-height: 560px;
-    }
+  @media (max-width: 1366px) {
+    padding-left: calc((100% - min(100%, 1366px)) / 2 + 2.5%);
+    min-height: 560px;
+  }
 
-    @media (max-width: 992px) {
-        padding-left: 20px;
-        min-height: 550px;
-    }
+  @media (max-width: 992px) {
+    padding-left: 20px;
+    min-height: 550px;
+  }
 
-    @media (max-width: 768px) {
-        padding-left: 15px;
-        min-height: 500px;
-    }
+  @media (max-width: 768px) {
+    padding-left: 15px;
+    min-height: 500px;
+  }
 
-    @media (max-width: 480px) {
-        padding-left: 10px;
-        min-height: 450px;
-    }
+  @media (max-width: 480px) {
+    padding-left: 10px;
+    min-height: 450px;
+  }
 }
 
 .mySwiper :global(.swiper-pagination-bullet) {
-    border-radius: 20px;
-    width: 100px;
-    height: 3px;
-    opacity: 1;
-    background: rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  width: 100px;
+  height: 3px;
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.2);
+
+  @media (max-width: 768px) {
+    width: 60px;
+    height: 2.5px;
+  }
+
+  @media (max-width: 480px) {
+    width: 40px;
+    height: 2px;
+  }
 }
 
 .mySwiper :global(.swiper-pagination-bullet-active) {
-    background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.8);
 }
 
+// Контейнер пагинации - ограничиваем ширину на мобильных
+.mySwiper :global(.swiper-pagination) {
+  @media (max-width: 768px) {
+    padding: 0 20px;
+    max-width: 100%;
+    overflow: hidden;
+  }
 
-.prices_card{
-    width: 325px;
-    min-height: 500px; 
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
+  @media (max-width: 480px) {
+    padding: 0 15px;
+  }
+}
+
+.prices_card {
+  width: 325px;
+  min-height: 500px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+
+  @media (max-width: 1440px) {
+    width: 300px;
+    min-height: 480px;
+    padding: 18px;
+  }
+
+  @media (max-width: 1366px) {
+    width: 290px;
+    min-height: 460px;
+    padding: 16px;
+  }
+
+  @media (max-width: 768px) {
+    width: 280px;
+    min-height: 450px;
+    padding: 15px;
+    border-radius: 15px;
+  }
+
+  @media (max-width: 480px) {
+    width: 100%;
+    min-height: 400px;
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  &::before {
+    content: '';
+    width: 100%;
     border-radius: 20px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
-
-    @media (max-width: 1440px) {
-      width: 300px;
-      min-height: 480px;
-      padding: 18px;
-    }
-
-    @media (max-width: 1366px) {
-      width: 290px;
-      min-height: 460px;
-      padding: 16px;
-    }
-
-    @media (max-width: 768px) {
-      width: 280px;
-      min-height: 450px;
-      padding: 15px;
-      border-radius: 15px;
-    }
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 50.1%,
+      rgba(0, 0, 0, 0.7) 100%
+    );
+    z-index: 1;
+    opacity: 1;
+    transition: opacity 0.4s ease;
 
     @media (max-width: 480px) {
-      width: 100%;
-      min-height: 400px;
-      padding: 12px;
       border-radius: 12px;
     }
+  }
 
-    &::before {
-        content: "";
+  &::after {
+    width: 100%;
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 40.1%,
+      rgba(0, 0, 0, 0.9) 100%
+    );
+
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 1;
+
+    @media (max-width: 480px) {
+      border-radius: 12px;
+    }
+  }
+
+  > * {
+    position: relative;
+    z-index: 2;
+  }
+
+  .text_block {
+    margin-top: auto;
+    color: #ffffff;
+
+    p {
+      font-size: 14px;
+    }
+  }
+
+  .bottomRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    @media (max-width: 480px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    p {
+      color: #ffffff;
+      margin: 0;
+      font-size: 28px;
+
+      @media (max-width: 1440px) {
+        font-size: 26px;
+      }
+
+      @media (max-width: 1366px) {
+        font-size: 24px;
+      }
+
+      @media (max-width: 768px) {
+        font-size: 24px;
+      }
+
+      @media (max-width: 480px) {
+        font-size: 20px;
+      }
+    }
+
+    .CTA_button {
+      height: 40px;
+      width: 140px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: #ffffff;
+      color: var(--button-color);
+      text-decoration: none;
+      transition: all 0.4s ease;
+
+      @media (max-width: 480px) {
         width: 100%;
-        border-radius: 20px;
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(180deg, rgba(0, 0, 0, 0) 50.1%, rgba(0, 0, 0, 0.7) 100%);
-        z-index: 1;
-        opacity: 1;
-        transition: opacity 0.4s ease;
+        max-width: 140px;
+      }
+
+      .button_text {
+        font-size: 16px;
+        line-height: 1;
+        white-space: nowrap;
+        transition: transform 0.4s ease;
 
         @media (max-width: 480px) {
-          border-radius: 12px;
+          font-size: 14px;
         }
-    }
+      }
 
-    &::after {
-        width: 100%;
-        content: "";
-        position: absolute;
-        inset: 0;
-        border-radius: 20px;
-        background: linear-gradient(180deg,rgba(0, 0, 0, 0.0) 40.1%,rgba(0, 0, 0, 0.9) 100%);
-
-        opacity: 0;
-        transition: opacity 0.4s ease;
-        z-index: 1;
+      .button_icon {
+        width: 33px;
+        height: 33px;
+        border-radius: 50%;
+        background: var(--decor-color);
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        transition: transform 0.4s ease;
 
         @media (max-width: 480px) {
-          border-radius: 12px;
+          width: 30px;
+          height: 30px;
         }
-    }
+      }
 
-    > * {
-        position: relative;
-        z-index: 2;
-    }
-
-    .text_block{
-        margin-top: auto;
-        color: #ffffff;
-
-        p{
-            font-size: 14px;
-        }
-    }
-
-        .bottomRow{
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 10px;
+      .button_arrow {
+        width: 22px;
+        height: 22px;
+        transform: rotate(-45deg);
+        transition: transform 0.4s ease;
 
         @media (max-width: 480px) {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 12px;
+          width: 20px;
+          height: 20px;
         }
+      }
 
-        p{
-            color: #ffffff;
-            margin: 0;
-            font-size: 28px;
-
-            @media (max-width: 1440px) {
-              font-size: 26px;
-            }
-
-            @media (max-width: 1366px) {
-              font-size: 24px;
-            }
-
-            @media (max-width: 768px) {
-              font-size: 24px;
-            }
-
-            @media (max-width: 480px) {
-              font-size: 20px;
-            }
-        }
-
-        .CTA_button{
-            height: 40px;
-            width: 140px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            padding: 3px 7px;
-            border-radius: 999px;
-            background: #FFFFFF;
-            color: var(--button-color);
-            text-decoration: none;
-            transition: all 0.4s ease;
-
-            @media (max-width: 480px) {
-              width: 100%;
-              max-width: 140px;
-            }
-
-            .button_text{
-                font-size: 16px;
-                line-height: 1;
-                white-space: nowrap;
-                transition: transform 0.4s ease;
-
-                @media (max-width: 480px) {
-                  font-size: 14px;
-                }
-            }
-
-            .button_icon{
-                width: 33px;
-                height: 33px;
-                border-radius: 50%;
-                background: var(--decor-color);
-                display: grid;
-                place-items: center;
-                flex-shrink: 0;
-                transition: transform 0.4s ease;
-
-                @media (max-width: 480px) {
-                  width: 30px;
-                  height: 30px;
-                }
-            }
-
-            .button_arrow{
-                width: 22px;
-                height: 22px;
-                transform: rotate(-45deg);
-                transition: transform 0.4s ease;
-
-                @media (max-width: 480px) {
-                  width: 20px;
-                  height: 20px;
-                }
-            }
-
-            &:active {
-                transform: translateY(1px);
-            }
-        }
+      &:active {
+        transform: translateY(1px);
+      }
     }
+  }
 
+  @media (hover: hover) {
     &:hover {
-        &::before {opacity: 0;}
-        &::after {opacity: 1;}
-        .bottomRow .CTA_button{
-            box-shadow: 0 0 12px rgba(255, 255, 255, 0.6), 0 0 24px rgba(255, 255, 255, 0.4);
-            .button_icon {
-                transform: translateX(calc(140px - 33px - 7px));
-            }
-
-            .button_text {
-                transform: translateX(-40px);
-            }
-
-            .button_arrow {
-                transform: rotate(0deg);
-            }
-
-            @media (max-width: 480px) {
-              .button_icon {
-                transform: translateX(calc(100% - 30px - 7px));
-              }
-              .button_text {
-                transform: translateX(-35px);
-              }
-            }
+      &::before {
+        opacity: 0;
+      }
+      &::after {
+        opacity: 1;
+      }
+      .bottomRow .CTA_button {
+        box-shadow: 0 0 12px rgba(255, 255, 255, 0.6),
+          0 0 24px rgba(255, 255, 255, 0.4);
+        .button_icon {
+          transform: translateX(calc(140px - 33px - 7px));
         }
+
+        .button_text {
+          transform: translateX(-40px);
+        }
+
+        .button_arrow {
+          transform: rotate(0deg);
+        }
+
+        @media (max-width: 480px) {
+          .button_icon {
+            transform: translateX(calc(100% - 30px - 7px));
+          }
+          .button_text {
+            transform: translateX(-35px);
+          }
+        }
+      }
     }
+  }
 }

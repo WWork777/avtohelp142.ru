@@ -61,10 +61,15 @@ export default function YandexMap() {
                 <p>Max</p>
                 <img src='/icons/max-blue.svg' alt='Email' />
               </div>
-              <div className={styles.info_block_bottom_item}>
+              <a
+                href='https://t.me/+yicmz5BqXSM4MzRi'
+                target='_blank'
+                rel='noopener noreferrer'
+                className={styles.info_block_bottom_item}
+              >
                 <p>Telegram</p>
                 <img src='/icons/tg-blue.svg' alt='Telegram' />
-              </div>
+              </a>
             </div>
           </div>
         </div>

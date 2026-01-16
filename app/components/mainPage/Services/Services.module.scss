@@ -29,17 +29,20 @@
     @media (max-width: 992px) {
       width: 100%;
       max-width: 288px;
+      margin-bottom: 40px;
     }
 
     @media (max-width: 768px) {
       height: 45px;
       gap: 25px;
+      margin-bottom: 40px;
     }
 
     @media (max-width: 480px) {
       height: 40px;
       gap: 20px;
       width: 100%;
+      margin-bottom: 40px;
     }
 
     .button_text {
@@ -87,25 +90,27 @@
       }
     }
 
-    &:hover {
-      .button_icon {
-        transform: translateX(calc(300px - 55px - 10px));
-      }
-
-      .button_text {
-        transform: translateX(-65px);
-      }
-
-      .button_arrow {
-        transform: rotate(0deg);
-      }
-
-      @media (max-width: 992px) {
+    @media (hover: hover) {
+      &:hover {
         .button_icon {
-          transform: translateX(calc(100% - 47px - 7px));
+          transform: translateX(calc(300px - 55px - 10px));
         }
+
         .button_text {
-          transform: translateX(-50px);
+          transform: translateX(-65px);
+        }
+
+        .button_arrow {
+          transform: rotate(0deg);
+        }
+
+        @media (max-width: 992px) {
+          .button_icon {
+            transform: translateX(calc(100% - 47px - 7px));
+          }
+          .button_text {
+            transform: translateX(-50px);
+          }
         }
       }
     }

@@ -1,6 +1,8 @@
 'use client';
 import Image from 'next/image';
 import { useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import styles from './Services.module.scss';
 
 export interface ServiceCardProps {
@@ -34,11 +36,41 @@ const services: ServiceCardProps[] = [
 
 export default function Services() {
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
+  const pathname = usePathname();
+
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const targetId = '#form';
+
+    // Если мы не на главной странице, переходим на главную с якорем
+    if (pathname !== '/') {
+      window.location.href = `/${targetId}`;
+      return;
+    }
+
+    // Если мы на главной странице, скроллим к элементу
+    const targetElement = document.getElementById('form');
+
+    if (targetElement) {
+      const headerHeight = 100; // Высота хедера
+      const targetPosition = targetElement.offsetTop - headerHeight;
+
+      window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth',
+      });
+    }
+  };
+
   return (
     <section id='services' className='container'>
       <div className={styles.services_header}>
         <h2>Услуги эвакуатора</h2>
-        <a className={styles.CTA_button} href='#'>
+        <Link
+          href='/#form'
+          className={styles.CTA_button}
+          onClick={handleLinkClick}
+        >
           <span className={styles.button_icon} aria-hidden='true'>
             <Image
               src={'/icons/arrow-white.svg'}
@@ -49,7 +81,7 @@ export default function Services() {
             />
           </span>
           <span className={styles.button_text}>Ознакомиться с ценами</span>
-        </a>
+        </Link>
       </div>
 
       <div className={styles.services_Gallery}>

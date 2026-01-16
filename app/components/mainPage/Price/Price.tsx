@@ -1,5 +1,6 @@
 'use client';
 import Image from 'next/image';
+import { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
@@ -71,7 +72,7 @@ export function SliderCard({ src, title, subtitle, price }: SliderCardProps) {
     <a
       className={styles.prices_card}
       style={{ backgroundImage: `url(${src})` }}
-      href='#'
+      href='tel:+79234807070'
     >
       <div className={styles.text_block}>
         <h4 className={styles.title}>{title}</h4>
@@ -90,7 +91,7 @@ export function SliderCard({ src, title, subtitle, price }: SliderCardProps) {
               alt='arrow'
             />
           </span>
-          <span className={styles.button_text}>Заказать</span>
+          <span className={styles.button_text}>Позвонить</span>
         </span>
       </div>
     </a>
@@ -98,6 +99,24 @@ export function SliderCard({ src, title, subtitle, price }: SliderCardProps) {
 }
 
 export default function Price() {
+  const [dynamicMainBullets, setDynamicMainBullets] = useState(5);
+
+  useEffect(() => {
+    const updateBullets = () => {
+      if (window.innerWidth <= 480) {
+        setDynamicMainBullets(3);
+      } else if (window.innerWidth <= 768) {
+        setDynamicMainBullets(4);
+      } else {
+        setDynamicMainBullets(5);
+      }
+    };
+
+    updateBullets();
+    window.addEventListener('resize', updateBullets);
+    return () => window.removeEventListener('resize', updateBullets);
+  }, []);
+
   return (
     <section id='price' className='container'>
       <h2>Под любые задачи</h2>
@@ -110,8 +129,8 @@ export default function Price() {
           slidesPerView='auto'
           pagination={{
             clickable: true,
-            dynamicBullets: true, // ✅ “умная” пагинация (не показывает все точки)
-            dynamicMainBullets: 5, // сколько “главных” видно одновременно
+            dynamicBullets: true, // ✅ "умная" пагинация (не показывает все точки)
+            dynamicMainBullets: dynamicMainBullets, // адаптивное количество видимых точек
           }}
           breakpoints={{
             320: {

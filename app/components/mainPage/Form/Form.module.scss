@@ -124,10 +124,23 @@
         margin-bottom: 20px;
       }
 
+      // Поле input напрямую в step должно быть на всю ширину
+      > .input {
+        width: 100%;
+        display: block;
+        margin-top: 8px;
+
+        @media (max-width: 480px) {
+          margin-top: 6px;
+        }
+      }
+
       .step_title {
         margin: 10px 0;
         font-size: 24px;
         color: #ffffff;
+        line-height: 1.3;
+        font-weight: 500;
 
         @media (max-width: 768px) {
           font-size: 20px;
@@ -136,7 +149,8 @@
 
         @media (max-width: 480px) {
           font-size: 18px;
-          margin: 6px 0;
+          margin: 6px 0 10px 0;
+          line-height: 1.2;
         }
       }
 
@@ -152,16 +166,38 @@
         }
       }
 
-      .wheels_grid,
       .rudder_grid {
         display: grid;
-        grid-template-columns: repeat(5, minmax(0, 70px));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 22px;
-        @media (max-width: 900px) {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
+
         @media (max-width: 520px) {
           grid-template-columns: 1fr;
+          gap: 15px;
+        }
+
+        @media (max-width: 480px) {
+          gap: 12px;
+        }
+      }
+
+      .wheels_grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 22px;
+
+        @media (max-width: 900px) {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 18px;
+        }
+
+        @media (max-width: 520px) {
+          grid-template-columns: 1fr;
+          gap: 15px;
+        }
+
+        @media (max-width: 480px) {
+          gap: 12px;
         }
       }
 
@@ -201,6 +237,17 @@
         gap: 10px;
         color: #ffffff;
         font-size: 16px;
+        line-height: 1.3;
+
+        @media (max-width: 768px) {
+          font-size: 15px;
+          gap: 8px;
+        }
+
+        @media (max-width: 480px) {
+          font-size: 14px;
+          gap: 6px;
+        }
       }
 
       .option_label::before {
@@ -209,6 +256,13 @@
         height: 18px;
         border-radius: 50%;
         border: 2px solid var(--decor-color);
+        flex-shrink: 0;
+
+        @media (max-width: 480px) {
+          width: 16px;
+          height: 16px;
+          border-width: 1.5px;
+        }
       }
 
       /* checked */
@@ -226,26 +280,36 @@
 
         @media (max-width: 768px) {
           width: 100%;
-          max-width: 250px;
+          max-width: 100%;
         }
 
         @media (max-width: 480px) {
           width: 100%;
         }
 
-        &::after {
+        // Для текстовых полей делаем на всю ширину
+        &:has(input[type='text']) {
+          width: 100%;
+          max-width: none;
+
+          @media (max-width: 768px) {
+            width: 100%;
+            max-width: none;
+          }
+        }
+
+        // Стрелка только для select
+        &:not(:has(input))::after {
           content: '';
           position: absolute;
           right: 18px;
           top: 50%;
-          transform: translateY(-50%);
+          transform: translateY(-50%) rotate(45deg);
           pointer-events: none;
-
           width: 10px;
           height: 10px;
           border-right: 2px solid #fff;
           border-bottom: 2px solid #fff;
-          transform: translateY(-50%) rotate(45deg);
           opacity: 0.9;
 
           @media (max-width: 480px) {
@@ -254,35 +318,83 @@
             height: 8px;
           }
         }
-      }
 
-      select {
-        width: 100%;
-        height: 50px;
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        padding: 0 44px 0 20px;
-        border-radius: 999px;
-        background: transparent;
-        border: 1.5px solid rgba(255, 255, 255, 0.6);
-        color: #fff;
-        font-size: 16px;
-        cursor: pointer;
+        select {
+          width: 100%;
+          height: 50px;
+          appearance: none;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          padding: 0 44px 0 20px;
+          border-radius: 999px;
+          background: transparent;
+          border: 1.5px solid rgba(255, 255, 255, 0.6);
+          color: #fff;
+          font-size: 16px;
+          cursor: pointer;
+          outline: none;
+          transition: border-color 0.25s ease, background 0.25s ease;
 
-        outline: none;
-        transition: border-color 0.25s ease, background 0.25s ease;
+          @media (hover: hover) {
+            &:hover {
+              border-color: #fff;
+            }
+          }
 
-        &:hover {
-          border-color: #fff;
+          &:focus {
+            border-color: var(--decor-color);
+          }
+
+          option {
+            color: #000; // важно для системного списка
+          }
         }
 
-        &:focus {
-          border-color: var(--decor-color);
+        input[type='number'],
+        input[type='text'] {
+          width: 100%;
+          height: 50px;
+          padding: 0 20px;
+          border-radius: 999px;
+          background: transparent;
+          border: 1.5px solid rgba(255, 255, 255, 0.6);
+          color: #fff;
+          font-size: 16px;
+          outline: none;
+          transition: border-color 0.25s ease;
+
+          &::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+          }
+
+          @media (hover: hover) {
+            &:hover {
+              border-color: #fff;
+            }
+          }
+
+          &:focus {
+            border-color: var(--decor-color);
+          }
+
+          @media (max-width: 480px) {
+            height: 45px;
+            font-size: 14px;
+            padding: 0 15px;
+          }
         }
 
-        option {
-          color: #000; // важно для системного списка
+        input[type='number'] {
+          appearance: textfield;
+          -moz-appearance: textfield; // Firefox
+
+          // Убираем стрелки в Chrome/Safari
+          &::-webkit-outer-spin-button,
+          &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            appearance: none;
+            margin: 0;
+          }
         }
       }
     }
@@ -301,10 +413,21 @@
       @media (max-width: 480px) {
         gap: 10px;
       }
+
+      .input {
+        flex: 1 1 0;
+        min-width: 0; // Важно для правильной работы flex
+        width: auto; // Переопределяем width: 100% для flex-контекста
+
+        @media (max-width: 768px) {
+          width: 100%; // На мобильных делаем на всю ширину
+          flex: none;
+        }
+      }
     }
 
     .input {
-      flex: 1;
+      width: 100%;
       height: 50px;
       padding: 0 20px;
       border-radius: 999px;
@@ -314,13 +437,16 @@
       font-size: 16px;
       outline: none;
       transition: border-color 0.25s ease;
+      box-sizing: border-box;
 
       &::placeholder {
         color: rgba(255, 255, 255, 0.6);
       }
 
-      &:hover {
-        border-color: #fff;
+      @media (hover: hover) {
+        &:hover {
+          border-color: #fff;
+        }
       }
 
       &:focus {
@@ -382,17 +508,41 @@
         font-size: 24px;
         color: #ffffff;
         margin: 0;
+        line-height: 1.4;
+        word-wrap: break-word;
 
         @media (max-width: 768px) {
           font-size: 20px;
+          line-height: 1.3;
         }
 
         @media (max-width: 480px) {
-          font-size: 18px;
+          font-size: 16px;
+          line-height: 1.3;
         }
       }
       p strong {
         color: var(--decor-color);
+      }
+
+      .priceDetails {
+        font-size: 18px;
+        color: rgba(255, 255, 255, 0.8);
+        font-weight: normal;
+        display: block;
+        margin-top: 4px;
+        line-height: 1.3;
+
+        @media (max-width: 768px) {
+          font-size: 16px;
+          margin-top: 6px;
+        }
+
+        @media (max-width: 480px) {
+          font-size: 12px;
+          margin-top: 8px;
+          line-height: 1.4;
+        }
       }
 
       .CTA_button {
@@ -466,27 +616,29 @@
           transform: translateY(1px);
         }
 
-        &:hover {
-          box-shadow: 0 0 12px rgba(255, 255, 255, 0.6),
-            0 0 24px rgba(255, 255, 255, 0.4);
-          .button_icon {
-            transform: translateX(calc(250px - 33px - 7px));
-          }
-
-          .button_text {
-            transform: translateX(-40px);
-          }
-
-          .button_arrow {
-            transform: rotate(0deg);
-          }
-
-          @media (max-width: 768px) {
+        @media (hover: hover) {
+          &:hover {
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.6),
+              0 0 24px rgba(255, 255, 255, 0.4);
             .button_icon {
-              transform: translateX(calc(100% - 33px - 7px));
+              transform: translateX(calc(250px - 33px - 7px));
             }
+
             .button_text {
-              transform: translateX(-30px);
+              transform: translateX(-40px);
+            }
+
+            .button_arrow {
+              transform: rotate(0deg);
+            }
+
+            @media (max-width: 768px) {
+              .button_icon {
+                transform: translateX(calc(100% - 33px - 7px));
+              }
+              .button_text {
+                transform: translateX(-30px);
+              }
             }
           }
         }

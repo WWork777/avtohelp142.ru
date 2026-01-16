@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, phone, carType, blockedWheels, steeringLocked, distanceType, price } = body;
+    const { name, phone, address, mode, weight, kilometers, price } = body;
 
     // Проверяем наличие обязательных полей
     if (!name || !phone) {
@@ -26,37 +26,42 @@ export async function POST(request: NextRequest) {
     }
 
     // Маппинг значений для читаемого формата
-    const carTypeMap: Record<string, string> = {
-      moto: 'Мотоцикл',
-      small: 'Малолитражная',
-      car: 'Легковая',
-      suv: 'Внедорожник',
-      minibus: 'Микроавтобус',
-    };
-
-    const distanceTypeMap: Record<string, string> = {
-      passing: 'Попутный',
+    const modeMap: Record<string, string> = {
       city: 'По городу',
-      region: 'По области',
       intercity: 'Межгород',
     };
 
+    const weightMap: Record<string, string> = {
+      upTo2: 'До 2 тонн',
+      over2: 'Свыше 2 тонн',
+      '3t': '3 тонны',
+      from3_5: 'От 3,5 тонн',
+      from4: 'От 4 тонн',
+      over5: 'Больше 5 тонн',
+    };
+
     // Формируем сообщение для Telegram
-    const message = `
+    let message = `
 🚗 *Новая заявка на эвакуатор*
 
 👤 *Контактные данные:*
 Имя: ${name}
-Телефон: ${phone}
+Телефон: ${phone}`;
 
-🚙 *Параметры заказа:*
-Тип авто: ${carTypeMap[carType] || carType}
-Заблокированные колеса: ${blockedWheels}
-Руль заблокирован: ${steeringLocked ? 'Да' : 'Нет'}
-Расстояние: ${distanceTypeMap[distanceType] || distanceType}
+    if (address && address.trim()) {
+      message += `\nАдрес забора: ${address.trim()}`;
+    }
 
-💰 *Стоимость:* ${price.toLocaleString('ru-RU')} ₽
-    `.trim();
+    message += `\n\n🚙 *Параметры заказа:*
+Режим: ${modeMap[mode] || mode}
+Вес машины: ${weightMap[weight] || weight}`;
+
+    if (mode === 'intercity' && kilometers) {
+      message += `\nРасстояние: ${parseFloat(kilometers).toLocaleString('ru-RU')} км`;
+    }
+
+    message += `\n\n💰 *Стоимость:* ${price.toLocaleString('ru-RU')} ₽`;
+    message = message.trim();
 
     // Отправляем сообщение в Telegram
     const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;

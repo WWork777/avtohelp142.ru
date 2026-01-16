@@ -144,7 +144,12 @@ export default function Header() {
 
             {/* Контакты и кнопка */}
             <div className={styles.socials}>
-              <div className={styles.socialBtn}>
+              <a
+                href='https://t.me/+yicmz5BqXSM4MzRi'
+                target='_blank'
+                rel='noopener noreferrer'
+                className={styles.socialBtn}
+              >
                 <span className={styles.iconWrap}>
                   <Image
                     src='/icons/tg.svg'
@@ -154,7 +159,7 @@ export default function Header() {
                   />
                 </span>
                 <span className={styles.text}>Telegram</span>
-              </div>
+              </a>
 
               <div className={styles.socialBtn}>
                 <span className={styles.iconWrap}>
@@ -246,14 +251,18 @@ export default function Header() {
               <span>{phone}</span>
             </Link>
             <div className={styles.socials}>
-              <div>
+              <a
+                href='https://t.me/+yicmz5BqXSM4MzRi'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
                 <Image
                   src='/icons/tg.svg'
                   alt='Telegram'
                   width={24}
                   height={24}
                 />
-              </div>
+              </a>
               <div>
                 <Image src='/icons/max.svg' alt='MAX' width={24} height={24} />
               </div>

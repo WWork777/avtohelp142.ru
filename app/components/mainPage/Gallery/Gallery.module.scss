@@ -152,25 +152,27 @@
     }
   }
 
-  &:hover {
-    .button_icon {
-      transform: translateX(calc(215px - 55px - 7px));
-    }
-
-    .button_text {
-      transform: translateX(-60px);
-    }
-
-    .button_arrow {
-      transform: rotate(0deg);
-    }
-
-    @media (max-width: 768px) {
+  @media (hover: hover) {
+    &:hover {
       .button_icon {
-        transform: translateX(calc(180px - 47px - 7px));
+        transform: translateX(calc(215px - 55px - 7px));
       }
+
       .button_text {
-        transform: translateX(-50px);
+        transform: translateX(-60px);
+      }
+
+      .button_arrow {
+        transform: rotate(0deg);
+      }
+
+      @media (max-width: 768px) {
+        .button_icon {
+          transform: translateX(calc(180px - 47px - 7px));
+        }
+        .button_text {
+          transform: translateX(-50px);
+        }
       }
     }
   }

@@ -4,25 +4,23 @@ import Image from 'next/image';
 import { useMemo, useState } from 'react';
 import styles from './Form.module.scss';
 
-type CarType = 'moto' | 'small' | 'car' | 'suv' | 'minibus';
-type DistanceType = 'passing' | 'city' | 'region' | 'intercity';
+type ModeType = 'city' | 'intercity';
+type WeightType = 'upTo2' | 'over2' | '3t' | 'from3_5' | 'from4' | 'over5';
 
 export default function Form() {
   // Контактные данные
   const [name, setName] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
+  const [address, setAddress] = useState<string>('');
 
-  // 1) Тип авто
-  const [carType, setCarType] = useState<CarType>('moto');
+  // Режим: по городу или межгород
+  const [mode, setMode] = useState<ModeType>('city');
 
-  // 2) Заблокированные колёса
-  const [blockedWheels, setBlockedWheels] = useState<0 | 1 | 2 | 3 | 4>(0);
+  // Вес машины
+  const [weight, setWeight] = useState<WeightType>('upTo2');
 
-  // 3) Руль заблокирован
-  const [steeringLocked, setSteeringLocked] = useState<boolean>(false);
-
-  // 4) Расстояние/тип маршрута
-  const [distanceType, setDistanceType] = useState<DistanceType>('passing');
+  // Километры (только для межгорода)
+  const [kilometers, setKilometers] = useState<string>('');
 
   // Состояния формы
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -31,25 +29,37 @@ export default function Form() {
   >('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  // Заглушка расчёта (потом подменишь своей логикой)
+  // Расчет цены
   const price = useMemo(() => {
-    let base = 3000;
+    // Цены по городу (фиксированные)
+    const cityPrices: Record<WeightType, number> = {
+      upTo2: 4000,
+      over2: 4500,
+      '3t': 5500,
+      from3_5: 6500,
+      from4: 7000,
+      over5: 9000,
+    };
 
-    if (carType === 'moto') base = 2500;
-    if (carType === 'small') base = 3000;
-    if (carType === 'car') base = 3500;
-    if (carType === 'suv') base = 4500;
-    if (carType === 'minibus') base = 5500;
+    // Цены межгород (за км)
+    const intercityPrices: Record<WeightType, number> = {
+      upTo2: 90,
+      over2: 100,
+      '3t': 120,
+      from3_5: 140,
+      from4: 150,
+      over5: 170,
+    };
 
-    base += blockedWheels * 400;
-    if (steeringLocked) base += 600;
-
-    if (distanceType === 'city') base += 500;
-    if (distanceType === 'region') base += 1500;
-    if (distanceType === 'intercity') base += 3000;
-
-    return base;
-  }, [carType, blockedWheels, steeringLocked, distanceType]);
+    if (mode === 'city') {
+      return cityPrices[weight];
+    } else {
+      // Межгород: цена за км * количество км
+      const pricePerKm = intercityPrices[weight];
+      const km = parseFloat(kilometers) || 0;
+      return pricePerKm * km;
+    }
+  }, [mode, weight, kilometers]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -75,6 +85,16 @@ export default function Form() {
       return;
     }
 
+    // Валидация километров для межгорода
+    if (mode === 'intercity') {
+      const km = parseFloat(kilometers);
+      if (!kilometers.trim() || isNaN(km) || km <= 0) {
+        setErrorMessage('Пожалуйста, введите корректное количество километров');
+        setSubmitStatus('error');
+        return;
+      }
+    }
+
     setIsSubmitting(true);
     setSubmitStatus('idle');
     setErrorMessage('');
@@ -88,10 +108,10 @@ export default function Form() {
         body: JSON.stringify({
           name: name.trim(),
           phone: phone.trim(),
-          carType,
-          blockedWheels,
-          steeringLocked,
-          distanceType,
+          address: address.trim(),
+          mode,
+          weight,
+          kilometers: mode === 'intercity' ? parseFloat(kilometers) : null,
           price,
         }),
       });
@@ -106,10 +126,10 @@ export default function Form() {
       // Очищаем форму после успешной отправки
       setName('');
       setPhone('');
-      setCarType('moto');
-      setBlockedWheels(0);
-      setSteeringLocked(false);
-      setDistanceType('passing');
+      setAddress('');
+      setMode('city');
+      setWeight('upTo2');
+      setKilometers('');
 
       // Скрываем сообщение об успехе через 5 секунд
       setTimeout(() => {
@@ -141,187 +161,138 @@ export default function Form() {
         </div>
 
         <form onSubmit={handleSubmit}>
-          {/* Тип авто */}
+          {/* Режим: по городу или межгород */}
           <div className={styles.step}>
-            <p className={styles.step_title}>Выберите тип авто:</p>
-            <div className={styles.types_grid}>
-              <label className={styles.option}>
-                <input
-                  type='radio'
-                  name='carType'
-                  value='moto'
-                  checked={carType === 'moto'}
-                  onChange={() => setCarType('moto')}
-                />
-
-                <Image
-                  className={styles.option_media}
-                  src='/images/Form/moto.png'
-                  alt=''
-                  width={163}
-                  height={64}
-                />
-
-                <span className={styles.option_label}>Мотоцикл</span>
-              </label>
-
-              <label className={styles.option}>
-                <input
-                  type='radio'
-                  name='carType'
-                  value='small'
-                  checked={carType === 'small'}
-                  onChange={() => setCarType('small')}
-                />
-
-                <Image
-                  className={styles.option_media}
-                  src='/images/Form/moto.png'
-                  alt=''
-                  width={163}
-                  height={64}
-                />
-
-                <span className={styles.option_label}>Малолитражная</span>
-              </label>
-
-              <label className={styles.option}>
-                <input
-                  type='radio'
-                  name='carType'
-                  value='car'
-                  checked={carType === 'car'}
-                  onChange={() => setCarType('car')}
-                />
-
-                <Image
-                  className={styles.option_media}
-                  src='/images/Form/moto.png'
-                  alt=''
-                  width={163}
-                  height={64}
-                />
-
-                <span className={styles.option_label}>Легковая</span>
-              </label>
-
-              <label className={styles.option}>
-                <input
-                  type='radio'
-                  name='carType'
-                  value='suv'
-                  checked={carType === 'suv'}
-                  onChange={() => setCarType('suv')}
-                />
-
-                <Image
-                  className={styles.option_media}
-                  src='/images/Form/moto.png'
-                  alt=''
-                  width={163}
-                  height={64}
-                />
-
-                <span className={styles.option_label}>Внедорожник</span>
-              </label>
-
-              <label className={styles.option}>
-                <input
-                  type='radio'
-                  name='carType'
-                  value='minibus'
-                  checked={carType === 'minibus'}
-                  onChange={() => setCarType('minibus')}
-                />
-
-                <Image
-                  className={styles.option_media}
-                  src='/images/Form/moto.png'
-                  alt=''
-                  width={163}
-                  height={64}
-                />
-
-                <span className={styles.option_label}>Микроавтобус</span>
-              </label>
-            </div>
-          </div>
-
-          {/* Заблокированные колёса */}
-          <div className={styles.step}>
-            <p className={styles.step_title}>Заблокированные колеса</p>
-            <div className={styles.wheels_grid}>
-              <label className={styles.option}>
-                <input
-                  type='radio'
-                  name='blockedWheels'
-                  value='0'
-                  checked={blockedWheels === 0}
-                  onChange={() => setBlockedWheels(0)}
-                />
-                <span className={styles.option_label}>Нет</span>
-              </label>
-
-              {[1, 2, 3, 4].map((n) => (
-                <label key={n} className={styles.option}>
-                  <input
-                    type='radio'
-                    name='blockedWheels'
-                    value={n}
-                    checked={blockedWheels === n}
-                    onChange={() => setBlockedWheels(n as 1 | 2 | 3 | 4)}
-                  />
-                  <span className={styles.option_label}>{n}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* Руль заблокирован */}
-          <div className={styles.step}>
-            <p className={styles.step_title}>Руль заблокирован</p>
+            <p className={styles.step_title}>Выберите режим:</p>
             <div className={styles.rudder_grid}>
               <label className={styles.option}>
                 <input
                   type='radio'
-                  name='steeringLocked'
-                  value='false'
-                  checked={steeringLocked === false}
-                  onChange={() => setSteeringLocked(false)}
+                  name='mode'
+                  value='city'
+                  checked={mode === 'city'}
+                  onChange={() => {
+                    setMode('city');
+                    setKilometers('');
+                  }}
                 />
-                <span className={styles.option_label}>Нет</span>
+                <span className={styles.option_label}>По городу</span>
               </label>
 
               <label className={styles.option}>
                 <input
                   type='radio'
-                  name='steeringLocked'
-                  value='true'
-                  checked={steeringLocked === true}
-                  onChange={() => setSteeringLocked(true)}
+                  name='mode'
+                  value='intercity'
+                  checked={mode === 'intercity'}
+                  onChange={() => setMode('intercity')}
                 />
-                <span className={styles.option_label}>Да</span>
+                <span className={styles.option_label}>Межгород</span>
               </label>
             </div>
           </div>
 
-          {/* Расстояние */}
+          {/* Вес машины */}
           <div className={styles.step}>
-            <p className={styles.step_title}>Расстояние</p>
-            <div className={styles.selectWrap}>
-              <select
-                id='distanceType'
-                value={distanceType}
-                onChange={(e) =>
-                  setDistanceType(e.target.value as DistanceType)
-                }
-              >
-                <option value='passing'>Попутный</option>
-                <option value='city'>По городу</option>
-                <option value='region'>По области</option>
-                <option value='intercity'>Межгород</option>
-              </select>
+            <p className={styles.step_title}>Вес машины:</p>
+            <div className={styles.wheels_grid}>
+              <label className={styles.option}>
+                <input
+                  type='radio'
+                  name='weight'
+                  value='upTo2'
+                  checked={weight === 'upTo2'}
+                  onChange={() => setWeight('upTo2')}
+                />
+                <span className={styles.option_label}>До 2 тонн</span>
+              </label>
+
+              <label className={styles.option}>
+                <input
+                  type='radio'
+                  name='weight'
+                  value='over2'
+                  checked={weight === 'over2'}
+                  onChange={() => setWeight('over2')}
+                />
+                <span className={styles.option_label}>Свыше 2 тонн</span>
+              </label>
+
+              <label className={styles.option}>
+                <input
+                  type='radio'
+                  name='weight'
+                  value='3t'
+                  checked={weight === '3t'}
+                  onChange={() => setWeight('3t')}
+                />
+                <span className={styles.option_label}>3 тонны</span>
+              </label>
+
+              <label className={styles.option}>
+                <input
+                  type='radio'
+                  name='weight'
+                  value='from3_5'
+                  checked={weight === 'from3_5'}
+                  onChange={() => setWeight('from3_5')}
+                />
+                <span className={styles.option_label}>От 3,5 тонн</span>
+              </label>
+
+              <label className={styles.option}>
+                <input
+                  type='radio'
+                  name='weight'
+                  value='from4'
+                  checked={weight === 'from4'}
+                  onChange={() => setWeight('from4')}
+                />
+                <span className={styles.option_label}>От 4 тонн</span>
+              </label>
+
+              <label className={styles.option}>
+                <input
+                  type='radio'
+                  name='weight'
+                  value='over5'
+                  checked={weight === 'over5'}
+                  onChange={() => setWeight('over5')}
+                />
+                <span className={styles.option_label}>Больше 5 тонн</span>
+              </label>
             </div>
+          </div>
+
+          {/* Километры для межгорода */}
+          {mode === 'intercity' && (
+            <div className={styles.step}>
+              <p className={styles.step_title}>Расстояние (км):</p>
+              <div className={styles.selectWrap}>
+                <input
+                  type='number'
+                  min='1'
+                  step='1'
+                  placeholder='Введите количество км'
+                  value={kilometers}
+                  onChange={(e) => setKilometers(e.target.value)}
+                  className={styles.input}
+                  required
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Адрес забора */}
+          <div className={styles.step}>
+            <p className={styles.step_title}>Адрес забора машины</p>
+            <input
+              type='text'
+              placeholder='Введите адрес'
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              className={styles.input}
+            />
           </div>
 
           {/* Контактные данные */}
@@ -360,8 +331,23 @@ export default function Form() {
           {/* Низ: стоимость и кнопка */}
           <div className={styles.form_bottomRow}>
             <p>
-              Стоимость составит ~{' '}
-              <strong>{price.toLocaleString('ru-RU')} </strong> ₽
+              {mode === 'city' ? (
+                <>
+                  Стоимость составит ~{' '}
+                  <strong>{price.toLocaleString('ru-RU')} </strong> ₽
+                </>
+              ) : (
+                <>
+                  Стоимость: <strong>{price.toLocaleString('ru-RU')} </strong> ₽
+                  {kilometers && (
+                    <span className={styles.priceDetails}>
+                      {' '}
+                      ({Math.round(price / parseFloat(kilometers))} ₽/км ×{' '}
+                      {parseFloat(kilometers).toLocaleString('ru-RU')} км)
+                    </span>
+                  )}
+                </>
+              )}
             </p>
 
             <button

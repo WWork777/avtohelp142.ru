@@ -179,9 +179,11 @@
       font-size: 16px;
     }
 
-    &:hover {
-      transform: scale(1.07);
-      opacity: 0.95;
+    @media (hover: hover) {
+      &:hover {
+        transform: scale(1.07);
+        opacity: 0.95;
+      }
     }
 
     &:active {
@@ -236,22 +238,24 @@
       padding: 3px 6px;
     }
 
-    &:nth-child(1):hover {
-      background: rgba(255, 255, 255, 1);
-      .iconWrap {
-        transform: translateX(100px);
+    @media (hover: hover) {
+      &:nth-child(1):hover {
+        background: rgba(255, 255, 255, 1);
+        .iconWrap {
+          transform: translateX(100px);
+        }
+        .text {
+          transform: translateX(-48px);
+        }
       }
-      .text {
-        transform: translateX(-48px);
-      }
-    }
-    &:nth-child(2):hover {
-      background: rgba(255, 255, 255, 1);
-      .iconWrap {
-        transform: translateX(58px);
-      }
-      .text {
-        transform: translateX(-48px);
+      &:nth-child(2):hover {
+        background: rgba(255, 255, 255, 1);
+        .iconWrap {
+          transform: translateX(58px);
+        }
+        .text {
+          transform: translateX(-48px);
+        }
       }
     }
   }
@@ -389,9 +393,11 @@
       text-decoration: none;
       font-weight: 600;
       opacity: 1;
-      &:hover {
-        transform: scale(1.07);
-        opacity: 0.95;
+      @media (hover: hover) {
+        &:hover {
+          transform: scale(1.07);
+          opacity: 0.95;
+        }
       }
 
       &:active {
@@ -434,29 +440,24 @@
   }
 }
 
-/* Изменение цвета бургера при скролле */
-.header.scrolled .burger span {
-  background: #000;
-}
-
-/* Бургер белый после Hero */
-.header.pastHero .burger span {
+/* Бургер белый по умолчанию (в Hero секции) */
+.header:not(.pastHero) .burger span {
   background: #ffffff;
 }
 
-/* Изменение цвета навигации при скролле */
-.header.scrolled .nav a {
+/* Бургер черный после Hero (приоритет выше всех) */
+.header.pastHero .burger span {
+  background: #000 !important;
+}
+
+/* Изменение цвета навигации при скролле (но только если еще не прошли Hero) */
+.header.scrolled:not(.pastHero) .nav a {
   color: #000;
 }
 
 /* Навигация белая после Hero */
 .header.pastHero .nav a {
   color: #ffffff !important;
-}
-
-/* Бургер белый по умолчанию (на Hero) */
-.header:not(.scrolled) .burger span {
-  background: #ffffff;
 }
 
 // Но если меню открыто — принудительно задать цвет (черный для контраста)

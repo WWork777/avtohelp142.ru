@@ -104,7 +104,11 @@ export default function Footer() {
 
         <div className={styles.right_side}>
           <div className={styles.links}>
-            <div>
+            <a
+              href='https://t.me/+yicmz5BqXSM4MzRi'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
               <Image
                 className={styles.icon}
                 src='/icons/tg-yellow.svg'
@@ -112,7 +116,7 @@ export default function Footer() {
                 width={42}
                 height={42}
               />
-            </div>
+            </a>
             <div>
               <Image
                 className={styles.icon}

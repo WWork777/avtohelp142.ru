@@ -11,7 +11,7 @@ export default function Hero() {
           Круглосуточные услуги эвакуации автомобилей быстро и недорого <br />{' '}
           Приедем в течение 20 мин
         </p>
-        <a className={styles.CTA_button} href='#'>
+        <a className={styles.CTA_button} href='tel:+79234807070'>
           <span className={styles.button_icon} aria-hidden='true'>
             <Image
               src={'/icons/arrow-gray.svg'}
