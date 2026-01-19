@@ -8,10 +8,10 @@ type ModeType = 'city' | 'intercity';
 type WeightType = 'upTo2' | 'over2' | '3t' | 'from3_5' | 'from4' | 'over5';
 
 export default function Form() {
-  // Контактные данные
-  const [name, setName] = useState<string>('');
-  const [phone, setPhone] = useState<string>('');
-  const [address, setAddress] = useState<string>('');
+  // Контактные данные (временно закомментированы - нет документов для сбора данных)
+  // const [name, setName] = useState<string>('');
+  // const [phone, setPhone] = useState<string>('');
+  // const [address, setAddress] = useState<string>('');
 
   // Режим: по городу или межгород
   const [mode, setMode] = useState<ModeType>('city');
@@ -22,12 +22,14 @@ export default function Form() {
   // Километры (только для межгорода)
   const [kilometers, setKilometers] = useState<string>('');
 
-  // Состояния формы
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [submitStatus, setSubmitStatus] = useState<
-    'idle' | 'success' | 'error'
-  >('idle');
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  // Состояния формы (временно закомментированы - функционал отправки формы заморожен)
+  // const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  // const [submitStatus, setSubmitStatus] = useState<
+  //   'idle' | 'success' | 'error'
+  // >('idle');
+  // const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const phoneNumber = '+79234807070'; // Телефон для временной кнопки
 
   // Расчет цены
   const price = useMemo(() => {
@@ -61,6 +63,8 @@ export default function Form() {
     }
   }, [mode, weight, kilometers]);
 
+  // Функция отправки формы временно заморожена - нет документов для сбора данных
+  /* 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -147,6 +151,7 @@ export default function Form() {
       setIsSubmitting(false);
     }
   }
+  */
 
   return (
     <section id='form' className={`container ${styles.form_background}`}>
@@ -160,7 +165,9 @@ export default function Form() {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit}>
+        {/* Временно используем div вместо form, пока не готовы документы для сбора данных */}
+        <div>
+          {/* <form onSubmit={handleSubmit}> */}
           {/* Режим: по городу или межгород */}
           <div className={styles.step}>
             <p className={styles.step_title}>Выберите режим:</p>
@@ -283,7 +290,8 @@ export default function Form() {
             </div>
           )}
 
-          {/* Адрес забора */}
+          {/* Поля сбора данных временно закомментированы - нет документов для сбора данных пользователей */}
+          {/* 
           <div className={styles.step}>
             <p className={styles.step_title}>Адрес забора машины</p>
             <input
@@ -295,7 +303,6 @@ export default function Form() {
             />
           </div>
 
-          {/* Контактные данные */}
           <div className={styles.step}>
             <p className={styles.step_title}>Ваши контактные данные</p>
             <div className={styles.contacts_row}>
@@ -318,7 +325,6 @@ export default function Form() {
             </div>
           </div>
 
-          {/* Сообщения об ошибке/успехе */}
           {submitStatus === 'error' && errorMessage && (
             <div className={styles.message_error}>{errorMessage}</div>
           )}
@@ -327,6 +333,7 @@ export default function Form() {
               Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.
             </div>
           )}
+          */}
 
           {/* Низ: стоимость и кнопка */}
           <div className={styles.form_bottomRow}>
@@ -350,6 +357,26 @@ export default function Form() {
               )}
             </p>
 
+            <a
+              href={`tel:${phoneNumber}`}
+              className={styles.CTA_button}
+            >
+              <span className={styles.button_icon} aria-hidden='true'>
+                <Image
+                  src={'/icons/arrow-E1.svg'}
+                  className={styles.button_arrow}
+                  height={40}
+                  width={40}
+                  alt='arrow'
+                />
+              </span>
+              <span className={styles.button_text}>
+                Вызвать эвакуатор
+              </span>
+            </a>
+
+            {/* Временно используем ссылку вместо кнопки submit */}
+            {/* 
             <button
               className={styles.CTA_button}
               type='submit'
@@ -368,8 +395,10 @@ export default function Form() {
                 {isSubmitting ? 'Отправка...' : 'Вызвать эвакуатор'}
               </span>
             </button>
+            */}
           </div>
-        </form>
+        </div>
+        {/* </form> */}
       </div>
     </section>
   );

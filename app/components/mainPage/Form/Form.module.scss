@@ -3,24 +3,26 @@
   background-size: cover;
   background-position: center;
   border-radius: 20px;
-  min-height: 800px;
+  min-height: 600px;
   height: auto;
   padding: 30px;
   max-width: 1460px;
+  display: flex;
+  align-items: center;
 
   @media (max-width: 1600px) {
     padding: 28px;
-    min-height: 750px;
+    min-height: 550px;
   }
 
   @media (max-width: 1440px) {
     padding: 25px;
-    min-height: 720px;
+    min-height: 520px;
   }
 
   @media (max-width: 1366px) {
     padding: 22px;
-    min-height: 700px;
+    min-height: 500px;
   }
 
   @media (max-width: 992px) {
@@ -38,7 +40,6 @@
     box-shadow: 0 0 12px rgba(255, 255, 255, 0.8),
       0 0 24px rgba(255, 255, 255, 0.4);
     width: calc(50% - 60px);
-    min-height: calc(100% - 60px);
     height: auto;
     padding: 30px;
     border-radius: 20px;
