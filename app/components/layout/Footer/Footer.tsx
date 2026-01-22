@@ -20,13 +20,13 @@ export default function Footer() {
       e.preventDefault();
       const targetId = href.substring(1);
 
-      // Если мы не на главной странице, переходим на главную с якорем
-      if (pathname !== '/') {
+      // Если мы не на главной странице или странице цен, переходим на главную с якорем
+      if (pathname !== '/' && pathname !== '/цены' && pathname !== '/ceny') {
         window.location.href = `/${href}`;
         return;
       }
 
-      // Если мы на главной странице, скроллим к элементу
+      // Если мы на главной странице или странице цен, скроллим к элементу
       const targetElement = document.getElementById(targetId);
 
       if (targetElement) {
@@ -38,6 +38,30 @@ export default function Footer() {
           behavior: 'smooth',
         });
       }
+    }
+  };
+
+  const handlePricesLinkClick = (
+    e: React.MouseEvent<HTMLAnchorElement>
+  ) => {
+    e.preventDefault();
+    const targetId = 'form';
+    
+    // Если мы не на странице цен, переходим на неё с якорем
+    if (pathname !== '/цены' && pathname !== '/ceny') {
+      window.location.href = '/цены/#form';
+      return;
+    }
+    
+    // Если мы уже на странице цен, просто скроллим к калькулятору
+    const targetElement = document.getElementById(targetId);
+    if (targetElement) {
+      const headerHeight = 100;
+      const targetPosition = targetElement.offsetTop - headerHeight;
+      window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth',
+      });
     }
   };
 
@@ -55,8 +79,8 @@ export default function Footer() {
                 Услуги эвакуатора
               </Link>
               <Link
-                href='/#price'
-                onClick={(e) => handleLinkClick(e, '#price')}
+                href='/цены/#form'
+                onClick={handlePricesLinkClick}
               >
                 Цены
               </Link>
@@ -99,7 +123,7 @@ export default function Footer() {
         <div className={styles.right_side}>
           <div className={styles.links}>
             <a
-              href='https://t.me/+yicmz5BqXSM4MzRi'
+              href='https://t.me/avtohelp142'
               target='_blank'
               rel='noopener noreferrer'
             >
@@ -111,7 +135,7 @@ export default function Footer() {
                 height={42}
               />
             </a>
-            <div>
+            <a href='tel:+79236369895'>
               <Image
                 className={styles.icon}
                 src='/icons/max-yellow.svg'
@@ -119,7 +143,7 @@ export default function Footer() {
                 width={42}
                 height={42}
               />
-            </div>
+            </a>
           </div>
           <a href={`mailto:${email}`}>{email}</a>
           <a href={`tel:${phone}`}>{phone}</a>

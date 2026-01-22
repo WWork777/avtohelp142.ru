@@ -6,8 +6,8 @@ export default function AnchorHandler() {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Обрабатываем якорь только на главной странице
-    if (pathname === '/') {
+    // Обрабатываем якорь на главной странице и странице цен
+    if (pathname === '/' || pathname === '/цены' || pathname === '/ceny') {
       const hash = window.location.hash;
       if (hash) {
         const targetId = hash.substring(1);

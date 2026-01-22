@@ -88,7 +88,7 @@ export default function Services() {
         {services.map((item, index) => (
           <a
             key={index}
-            href='#'
+            href='tel:+79234807070'
             className={`${styles.card_body} ${
               activeIndex === index ? styles.active : ''
             }`}

@@ -197,12 +197,15 @@ export default function YandexMap() {
             </div>
 
             <div className={styles.info_block_bottom}>
-              <div className={styles.info_block_bottom_item}>
+              <a
+                href='tel:+79236369895'
+                className={styles.info_block_bottom_item}
+              >
                 <p>Max</p>
                 <img src='/icons/max-blue.svg' alt='Email' />
-              </div>
+              </a>
               <a
-                href='https://t.me/+yicmz5BqXSM4MzRi'
+                href='https://t.me/avtohelp142'
                 target='_blank'
                 rel='noopener noreferrer'
                 className={styles.info_block_bottom_item}

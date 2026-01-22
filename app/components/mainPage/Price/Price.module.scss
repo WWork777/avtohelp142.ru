@@ -258,8 +258,10 @@
         }
       }
 
-      &:active {
-        transform: translateY(1px);
+      @media (hover: hover) {
+        &:active {
+          transform: translateY(1px);
+        }
       }
     }
   }

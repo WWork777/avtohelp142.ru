@@ -252,10 +252,10 @@
         background: rgba(255, 255, 255, 1);
         transform: scale(1.1);
       }
-    }
 
-    &:active {
-      transform: scale(0.95);
+      &:active {
+        transform: scale(0.95);
+      }
     }
 
     img {
@@ -322,10 +322,10 @@
         transform: scale(1.07);
         opacity: 0.95;
       }
-    }
 
-    &:active {
-      transform: scale(0.98);
+      &:active {
+        transform: scale(0.98);
+      }
     }
   }
 
@@ -536,10 +536,10 @@
           transform: scale(1.07);
           opacity: 0.95;
         }
-      }
 
-      &:active {
-        transform: scale(0.98);
+        &:active {
+          transform: scale(0.98);
+        }
       }
     }
 
@@ -577,10 +577,10 @@
           opacity: 0.8;
           transform: scale(1.05);
         }
-      }
 
-      &:active {
-        transform: scale(0.98);
+        &:active {
+          transform: scale(0.98);
+        }
       }
 
       @media (max-width: 480px) {

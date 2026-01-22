@@ -621,10 +621,6 @@
           }
         }
 
-        &:active {
-          transform: translateY(1px);
-        }
-
         @media (hover: hover) {
           &:hover {
             box-shadow: 0 0 12px rgba(255, 255, 255, 0.6),
@@ -649,6 +645,10 @@
                 transform: translateX(-30px);
               }
             }
+          }
+
+          &:active {
+            transform: translateY(1px);
           }
         }
 
