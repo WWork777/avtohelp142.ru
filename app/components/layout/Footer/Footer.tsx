@@ -135,7 +135,11 @@ export default function Footer() {
                 height={42}
               />
             </a>
-            <a href='tel:+79236369895'>
+            <a
+              href='https://max.ru/u/f9LHodD0cOJKIJtCLzt9R39PdOR-MG1fi9sdMh9cEZzuXB-ca-EqbrqgtN4'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
               <Image
                 className={styles.icon}
                 src='/icons/max-yellow.svg'

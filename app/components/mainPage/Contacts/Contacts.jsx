@@ -198,7 +198,9 @@ export default function YandexMap() {
 
             <div className={styles.info_block_bottom}>
               <a
-                href='tel:+79236369895'
+                href='https://max.ru/u/f9LHodD0cOJKIJtCLzt9R39PdOR-MG1fi9sdMh9cEZzuXB-ca-EqbrqgtN4'
+                target='_blank'
+                rel='noopener noreferrer'
                 className={styles.info_block_bottom_item}
               >
                 <p>Max</p>

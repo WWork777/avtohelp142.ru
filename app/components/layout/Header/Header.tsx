@@ -189,7 +189,9 @@ export default function Header() {
               </a>
 
               <a
-                href='tel:+79236369895'
+                href='https://max.ru/u/f9LHodD0cOJKIJtCLzt9R39PdOR-MG1fi9sdMh9cEZzuXB-ca-EqbrqgtN4'
+                target='_blank'
+                rel='noopener noreferrer'
                 className={styles.socialBtn}
               >
                 <span className={styles.iconWrap}>
@@ -221,7 +223,9 @@ export default function Header() {
               />
             </a>
             <a
-              href='tel:+79236369895'
+              href='https://max.ru/u/f9LHodD0cOJKIJtCLzt9R39PdOR-MG1fi9sdMh9cEZzuXB-ca-EqbrqgtN4'
+              target='_blank'
+              rel='noopener noreferrer'
               className={styles.mobile_social_icon}
             >
               <Image
@@ -324,7 +328,11 @@ export default function Header() {
                   height={24}
                 />
               </a>
-              <a href='tel:+79236369895'>
+              <a
+                href='https://max.ru/u/f9LHodD0cOJKIJtCLzt9R39PdOR-MG1fi9sdMh9cEZzuXB-ca-EqbrqgtN4'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
                 <Image src='/icons/max.svg' alt='MAX' width={24} height={24} />
               </a>
             </div>
