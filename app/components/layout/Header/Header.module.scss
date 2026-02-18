@@ -104,8 +104,8 @@
     max-height: 100px;
 
     @media (max-width: 480px) {
-      max-width: 80px;
-      max-height: 80px;
+      max-width: 150px;
+      max-height: 150px;
     }
   }
 }
@@ -167,7 +167,7 @@
 
 /* Мобильный логотип в хедере */
 .mobile_logo_header {
-  display: none;
+  // display: none;
   align-items: center;
   gap: 12px;
   flex-shrink: 0;
@@ -179,8 +179,8 @@
 
   img {
     height: auto;
-    width: 50px;
-    max-height: 50px;
+    width: 140px;
+    max-height: 70px;
     object-fit: contain;
     flex-shrink: 0;
   }
@@ -188,8 +188,8 @@
   @media (max-width: 480px) {
     gap: 10px;
     img {
-      width: 45px;
-      max-height: 45px;
+      width: auto;
+      height: 36px;
     }
   }
 

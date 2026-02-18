@@ -121,11 +121,7 @@ export default function Header() {
         <div className={styles.inner}>
           {/* Логотип с текстом - виден на мобильных */}
           <Link href='/' className={styles.mobile_logo_header}>
-            {/* <Image src='/images/logo.png' alt='Логотип' width={50} height={50} priority /> */}
-            <div className={styles.mobile_logo_text}>
-              <p>Эвакуатор</p>
-              <p>в Кемерово</p>
-            </div>
+            <Image src='/images/garagelogo.svg' alt='Логотип' width={140} height={70} priority />
           </Link>
 
           {/* Навигация desktop */}
@@ -260,19 +256,19 @@ export default function Header() {
           }`}
           onClick={(e) => e.stopPropagation()}
         >
-          {/* <Link
+          <Link
             href='/'
             onClick={() => setMenuOpen(false)}
             className={styles.mobile_logo_container}
           >
             <Image
-              src='/images/logo.png'
+              src='/images/garagelogo.svg'
               alt='Логотип'
-              width={80}
-              height={80}
+              width={120}
+              height={120}
               className={styles.mobile_logo}
             />
-          </Link> */}
+          </Link>
           <nav>
             <Link href='/#form' onClick={(e) => handleLinkClick(e, '#form')}>
               Услуги эвакуатора
