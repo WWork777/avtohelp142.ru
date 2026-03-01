@@ -206,3 +206,146 @@
     }
   }
 }
+// Блок о разработчике
+.developerBlock {
+  width: 100%;
+  max-width: 1520px;
+  margin: 40px auto 0;
+  padding: 30px 20px 75px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 1440px) {
+    margin-top: 35px;
+    padding: 25px 20px 75px;
+  }
+
+  @media (max-width: 1366px) {
+    margin-top: 30px;
+    padding: 25px 20px 75px;
+  }
+
+  @media (max-width: 992px) {
+    margin-top: 25px;
+    padding: 20px 20px 75px;
+  }
+
+  @media (max-width: 480px) {
+    margin-top: 20px;
+    padding: 20px 15px 75px;
+  }
+}
+
+.developerContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+.developerLabel {
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  white-space: nowrap;
+
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
+  }
+}
+
+.developerLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: #000;
+  transition: all 0.3s ease;
+  padding: 8px 16px;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.04);
+    transform: translateY(-2px);
+
+    .developerName {
+      color: #d4a373;
+    }
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: center;
+    padding: 8px 12px;
+  }
+}
+
+.developerLogoWrapper {
+  background: rgba(0, 0, 0, 0.03);
+  padding: 6px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.developerLogo {
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+
+  @media (min-width: 768px) {
+    height: 32px;
+  }
+}
+
+.developerInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.developerName {
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.2;
+  transition: color 0.3s ease;
+
+  @media (min-width: 768px) {
+    font-size: 1.2rem;
+  }
+}
+
+.developerDescription {
+  font-size: 0.75rem;
+  color: rgba(0, 0, 0, 0.5);
+
+  @media (min-width: 768px) {
+    font-size: 0.8rem;
+  }
+}
+
+/* Адаптация для очень маленьких экранов */
+@media (max-width: 360px) {
+  .developerLogo {
+    height: 24px;
+  }
+
+  .developerName {
+    font-size: 1rem;
+  }
+
+  .developerDescription {
+    font-size: 0.7rem;
+  }
+}

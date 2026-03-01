@@ -162,6 +162,34 @@ export default function Footer() {
           </a>
         </div>
       </div>
+
+      {/* Блок о разработчике */}
+      <div className={styles.developerBlock}>
+        <div className={styles.developerContent}>
+          <span className={styles.developerLabel}>Разработка сайта</span>
+          <a
+            href="https://virlab42.ru"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.developerLink}
+            aria-label="Сайт разработчика"
+          >
+            <div className={styles.developerLogoWrapper}>
+              <img
+                src="/site.png"
+                alt="Логотип разработчика"
+                className={styles.developerLogo}
+              />
+            </div>
+            <div className={styles.developerInfo}>
+              <span className={styles.developerName}>Вирлаб</span>
+              <span className={styles.developerDescription}>
+                Создание и продвижение сайтов
+              </span>
+            </div>
+          </a>
+        </div>
+      </div>
     </footer>
   );
 }
