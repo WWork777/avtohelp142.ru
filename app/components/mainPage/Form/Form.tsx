@@ -1,39 +1,76 @@
+// app/components/mainPage/Form/Form.tsx
 'use client';
 
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
+import Link from 'next/link';
 import styles from './Form.module.scss';
 
 type ModeType = 'city' | 'intercity';
 type WeightType = 'upTo2' | 'over2' | '3t' | 'from3_5' | 'from4' | 'over5';
+type FormStep = 'params' | 'contacts' | 'success';
+
+// 🔥 Лейблы для веса
+const WEIGHT_LABELS: Record<WeightType, string> = {
+  upTo2: 'До 2 тонн',
+  over2: 'Свыше 2 тонн',
+  '3t': '3 тонны',
+  from3_5: 'От 3,5 тонн',
+  from4: 'От 4 тонн',
+  over5: 'Больше 5 тонн',
+};
+
+const getWeightLabel = (value: WeightType): string => WEIGHT_LABELS[value];
 
 export default function Form() {
-  // Контактные данные (временно закомментированы - нет документов для сбора данных)
-  // const [name, setName] = useState<string>('');
-  // const [phone, setPhone] = useState<string>('');
-  // const [address, setAddress] = useState<string>('');
+  // 🔥 Шаг формы
+  const [currentStep, setCurrentStep] = useState<FormStep>('params');
 
-  // Режим: по городу или межгород
+  // Контактные данные
+  const [name, setName] = useState<string>('');
+  const [phone, setPhone] = useState<string>('');
+  const [agreed, setAgreed] = useState<boolean>(false);
+
+  // Параметры эвакуации
   const [mode, setMode] = useState<ModeType>('city');
-
-  // Вес машины
   const [weight, setWeight] = useState<WeightType>('upTo2');
-
-  // Километры (только для межгорода)
   const [kilometers, setKilometers] = useState<string>('');
 
-  // Состояния формы (временно закомментированы - функционал отправки формы заморожен)
-  // const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  // const [submitStatus, setSubmitStatus] = useState<
-  //   'idle' | 'success' | 'error'
-  // >('idle');
-  // const [errorMessage, setErrorMessage] = useState<string>('');
+  // Состояния формы
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [paramsError, setParamsError] = useState<string>('');
 
-  const phoneNumber = '+79234807070'; // Телефон для временной кнопки
+  const phoneNumber = '+79234807070';
+
+  // 🔥 Функция отправки цели Яндекс.Метрики
+  const sendYandexGoal = (goalId: string) => {
+    if (typeof window !== 'undefined' && (window as any).ym) {
+      try {
+        (window as any).ym(106319272, 'reachGoal', goalId);
+        console.log(`✅ Yandex Metrika goal sent: ${goalId}`);
+      } catch (error) {
+        console.error('❌ Error sending Yandex Metrika goal:', error);
+      }
+    }
+  };
+
+  // 🔥 Сводка параметров
+  const paramsSummary = useMemo(() => {
+    const parts: string[] = [];
+    
+    parts.push(mode === 'city' ? 'По городу' : 'Межгород');
+    parts.push(`${getWeightLabel(weight)}`);
+    
+    if (mode === 'intercity' && kilometers) {
+      parts.push(`${parseFloat(kilometers).toLocaleString('ru-RU')} км`);
+    }
+    
+    return parts.join(' • ');
+  }, [mode, weight, kilometers]);
 
   // Расчет цены
   const price = useMemo(() => {
-    // Цены по городу (фиксированные)
     const cityPrices: Record<WeightType, number> = {
       upTo2: 4000,
       over2: 4500,
@@ -43,7 +80,6 @@ export default function Form() {
       over5: 9000,
     };
 
-    // Цены межгород (за км)
     const intercityPrices: Record<WeightType, number> = {
       upTo2: 90,
       over2: 100,
@@ -56,67 +92,91 @@ export default function Form() {
     if (mode === 'city') {
       return cityPrices[weight];
     } else {
-      // Межгород: цена за км * количество км
       const pricePerKm = intercityPrices[weight];
       const km = parseFloat(kilometers) || 0;
       return pricePerKm * km;
     }
   }, [mode, weight, kilometers]);
 
-  // Функция отправки формы временно заморожена - нет документов для сбора данных
-  /* 
+  // 🔥 Валидация телефона
+  const validatePhone = (phone: string): boolean => {
+    const digits = phone.replace(/\D/g, '');
+    return digits.length >= 10 && digits.length <= 12;
+  };
+
+  // 🔥 Валидация параметров (Шаг 1)
+  const validateParams = (): boolean => {
+    if (mode === 'intercity') {
+      const km = parseFloat(kilometers);
+      if (!kilometers.trim() || isNaN(km) || km <= 0) {
+        setParamsError('Пожалуйста, введите корректное расстояние');
+        return false;
+      }
+    }
+    setParamsError('');
+    return true;
+  };
+
+  // 🔥 Переход к контактам
+  const handleContinue = () => {
+    if (validateParams()) {
+      setCurrentStep('contacts');
+      setErrorMessage('');
+      const formSection = document.getElementById('form');
+      if (formSection) {
+        formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  };
+
+  // 🔥 Возврат к параметрам
+  const handleBack = () => {
+    setCurrentStep('params');
+    setErrorMessage('');
+    setParamsError('');
+  };
+
+  // 🔥 Отправка формы (Шаг 2)
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setErrorMessage('');
 
-    // Валидация
+    // Валидация контактов
     if (!name.trim()) {
       setErrorMessage('Пожалуйста, введите ваше имя');
-      setSubmitStatus('error');
       return;
     }
 
     if (!phone.trim()) {
       setErrorMessage('Пожалуйста, введите ваш телефон');
-      setSubmitStatus('error');
       return;
     }
 
-    // Базовая валидация телефона (только проверка на наличие цифр)
-    const phoneRegex = /[\d\s\-\+\(\)]/;
-    if (!phoneRegex.test(phone) || phone.replace(/\D/g, '').length < 10) {
+    if (!validatePhone(phone)) {
       setErrorMessage('Пожалуйста, введите корректный номер телефона');
-      setSubmitStatus('error');
       return;
     }
 
-    // Валидация километров для межгорода
-    if (mode === 'intercity') {
-      const km = parseFloat(kilometers);
-      if (!kilometers.trim() || isNaN(km) || km <= 0) {
-        setErrorMessage('Пожалуйста, введите корректное количество километров');
-        setSubmitStatus('error');
-        return;
-      }
+    if (!agreed) {
+      setErrorMessage('Необходимо согласие с политикой конфиденциальности');
+      return;
     }
 
     setIsSubmitting(true);
-    setSubmitStatus('idle');
-    setErrorMessage('');
 
     try {
       const response = await fetch('/api/send-to-telegram', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: name.trim(),
           phone: phone.trim(),
-          address: address.trim(),
+          address: '',
           mode,
           weight,
-          kilometers: mode === 'intercity' ? parseFloat(kilometers) : null,
+          kilometers: mode === 'intercity' ? parseFloat(kilometers) : '',
           price,
+          agreed,
         }),
       });
 
@@ -126,279 +186,344 @@ export default function Form() {
         throw new Error(data.error || 'Ошибка при отправке заявки');
       }
 
-      setSubmitStatus('success');
-      // Очищаем форму после успешной отправки
+      // 🔥 Переход на экран успеха
+      setCurrentStep('success');
+      
+      // 🔥 ОТПРАВЛЯЕМ ЦЕЛЬ: calc_form (калькулятор)
+      sendYandexGoal('calc_form');
+      
+      // Сброс данных
       setName('');
       setPhone('');
-      setAddress('');
+      setAgreed(false);
       setMode('city');
       setWeight('upTo2');
       setKilometers('');
-
-      // Скрываем сообщение об успехе через 5 секунд
-      setTimeout(() => {
-        setSubmitStatus('idle');
-      }, 5000);
     } catch (error) {
       console.error('Ошибка отправки заявки:', error);
-      setSubmitStatus('error');
-      setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : 'Произошла ошибка при отправке заявки'
-      );
+      setErrorMessage(error instanceof Error ? error.message : 'Произошла ошибка при отправке');
     } finally {
       setIsSubmitting(false);
     }
   }
-  */
+
+  // 🔥 Сброс формы и возврат к началу
+  const handleNewRequest = () => {
+    setCurrentStep('params');
+    setErrorMessage('');
+    setParamsError('');
+  };
 
   return (
     <section id='form' className={`container ${styles.form_background}`}>
       <div className={styles.form_content}>
-        {/* Верхние "табы/кнопки" как на макете */}
+        {/* Верхние "табы" */}
         <div className={styles.form_topActions}>
           <button type='button'>Онлайн калькулятор</button>
           <button type='button'>Расчет стоимости</button>
-          <button type='button' aria-label='Помощь'>
-            ?
-          </button>
+          <button type='button' aria-label='Помощь'>?</button>
         </div>
 
-        {/* Временно используем div вместо form, пока не готовы документы для сбора данных */}
-        <div>
-          {/* <form onSubmit={handleSubmit}> */}
-          {/* Режим: по городу или межгород */}
-          <div className={styles.step}>
-            <p className={styles.step_title}>Выберите режим:</p>
-            <div className={styles.rudder_grid}>
-              <label className={styles.option}>
-                <input
-                  type='radio'
-                  name='mode'
-                  value='city'
-                  checked={mode === 'city'}
-                  onChange={() => {
-                    setMode('city');
-                    setKilometers('');
-                  }}
-                />
-                <span className={styles.option_label}>По городу</span>
-              </label>
-
-              <label className={styles.option}>
-                <input
-                  type='radio'
-                  name='mode'
-                  value='intercity'
-                  checked={mode === 'intercity'}
-                  onChange={() => setMode('intercity')}
-                />
-                <span className={styles.option_label}>Межгород</span>
-              </label>
+        {/* 🔥 Индикатор шагов (скрыт на экране успеха) */}
+        {currentStep !== 'success' && (
+          <div className={styles.steps_indicator}>
+            <div className={`${styles.step_dot} ${currentStep === 'params' ? styles.active : ''}`}>
+              <span className={styles.step_number}>1</span>
+              <span className={styles.step_label}>Параметры</span>
+            </div>
+            <div className={styles.step_line} />
+            <div className={`${styles.step_dot} ${currentStep === 'contacts' ? styles.active : ''}`}>
+              <span className={styles.step_number}>2</span>
+              <span className={styles.step_label}>Контакты</span>
             </div>
           </div>
+        )}
 
-          {/* Вес машины */}
-          <div className={styles.step}>
-            <p className={styles.step_title}>Вес машины:</p>
-            <div className={styles.wheels_grid}>
-              <label className={styles.option}>
-                <input
-                  type='radio'
-                  name='weight'
-                  value='upTo2'
-                  checked={weight === 'upTo2'}
-                  onChange={() => setWeight('upTo2')}
-                />
-                <span className={styles.option_label}>До 2 тонн</span>
-              </label>
+        <form onSubmit={handleSubmit}>
+          {/* 🔹 ШАГ 1: Параметры эвакуации */}
+          {currentStep === 'params' && (
+            <div className={styles.step_content}>
+              {/* Режим */}
+              <div className={styles.step}>
+                <p className={styles.step_title}>Выберите режим:</p>
+                <div className={styles.rudder_grid}>
+                  <label className={styles.option}>
+                    <input
+                      type='radio'
+                      name='mode'
+                      value='city'
+                      checked={mode === 'city'}
+                      onChange={() => { setMode('city'); setKilometers(''); }}
+                      disabled={isSubmitting}
+                    />
+                    <span className={styles.option_label}>По городу</span>
+                  </label>
+                  <label className={styles.option}>
+                    <input
+                      type='radio'
+                      name='mode'
+                      value='intercity'
+                      checked={mode === 'intercity'}
+                      onChange={() => setMode('intercity')}
+                      disabled={isSubmitting}
+                    />
+                    <span className={styles.option_label}>Межгород</span>
+                  </label>
+                </div>
+              </div>
 
-              <label className={styles.option}>
-                <input
-                  type='radio'
-                  name='weight'
-                  value='over2'
-                  checked={weight === 'over2'}
-                  onChange={() => setWeight('over2')}
-                />
-                <span className={styles.option_label}>Свыше 2 тонн</span>
-              </label>
+              {/* Вес */}
+              <div className={styles.step}>
+                <p className={styles.step_title}>Вес машины:</p>
+                <div className={styles.wheels_grid}>
+                  {[
+                    { value: 'upTo2', label: 'До 2 тонн' },
+                    { value: 'over2', label: 'Свыше 2 тонн' },
+                    { value: '3t', label: '3 тонны' },
+                    { value: 'from3_5', label: 'От 3,5 тонн' },
+                    { value: 'from4', label: 'От 4 тонн' },
+                    { value: 'over5', label: 'Больше 5 тонн' },
+                  ].map((item) => (
+                    <label key={item.value} className={styles.option}>
+                      <input
+                        type='radio'
+                        name='weight'
+                        value={item.value}
+                        checked={weight === item.value}
+                        onChange={() => setWeight(item.value as WeightType)}
+                        disabled={isSubmitting}
+                      />
+                      <span className={styles.option_label}>{item.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
 
-              <label className={styles.option}>
-                <input
-                  type='radio'
-                  name='weight'
-                  value='3t'
-                  checked={weight === '3t'}
-                  onChange={() => setWeight('3t')}
-                />
-                <span className={styles.option_label}>3 тонны</span>
-              </label>
+              {/* Километры */}
+              {mode === 'intercity' && (
+                <div className={styles.step}>
+                  <p className={styles.step_title}>Расстояние (км):</p>
+                  <div className={styles.selectWrap}>
+                    <input
+                      type='number'
+                      min='1'
+                      step='1'
+                      placeholder='Введите количество км'
+                      value={kilometers}
+                      onChange={(e) => setKilometers(e.target.value)}
+                      className={styles.input}
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                </div>
+              )}
 
-              <label className={styles.option}>
-                <input
-                  type='radio'
-                  name='weight'
-                  value='from3_5'
-                  checked={weight === 'from3_5'}
-                  onChange={() => setWeight('from3_5')}
-                />
-                <span className={styles.option_label}>От 3,5 тонн</span>
-              </label>
+              {/* Ошибка параметров */}
+              {paramsError && (
+                <div className={styles.message_error}>{paramsError}</div>
+              )}
 
-              <label className={styles.option}>
-                <input
-                  type='radio'
-                  name='weight'
-                  value='from4'
-                  checked={weight === 'from4'}
-                  onChange={() => setWeight('from4')}
-                />
-                <span className={styles.option_label}>От 4 тонн</span>
-              </label>
+              {/* Низ: стоимость и кнопка "Далее" */}
+              <div className={styles.form_bottomRow}>
+                <p>
+                  {mode === 'city' ? (
+                    <>
+                      Стоимость: <strong>{price.toLocaleString('ru-RU')} ₽</strong>
+                    </>
+                  ) : (
+                    <>
+                      Стоимость: <strong>{price.toLocaleString('ru-RU')} ₽</strong>
+                      {kilometers && (
+                        <span className={styles.priceDetails}>
+                          {' '}
+                          ({Math.round(price / parseFloat(kilometers))} ₽/км ×{' '}
+                          {parseFloat(kilometers).toLocaleString('ru-RU')} км)
+                        </span>
+                      )}
+                    </>
+                  )}
+                </p>
 
-              <label className={styles.option}>
-                <input
-                  type='radio'
-                  name='weight'
-                  value='over5'
-                  checked={weight === 'over5'}
-                  onChange={() => setWeight('over5')}
-                />
-                <span className={styles.option_label}>Больше 5 тонн</span>
-              </label>
-            </div>
-          </div>
-
-          {/* Километры для межгорода */}
-          {mode === 'intercity' && (
-            <div className={styles.step}>
-              <p className={styles.step_title}>Расстояние (км):</p>
-              <div className={styles.selectWrap}>
-                <input
-                  type='number'
-                  min='1'
-                  step='1'
-                  placeholder='Введите количество км'
-                  value={kilometers}
-                  onChange={(e) => setKilometers(e.target.value)}
-                  className={styles.input}
-                  required
-                />
+                <button
+                  type='button'
+                  className={styles.CTA_button}
+                  onClick={handleContinue}
+                  disabled={isSubmitting}
+                >
+                  <span className={styles.button_icon} aria-hidden='true'>
+                    <Image
+                      src={'/icons/arrow-E1.svg'}
+                      className={styles.button_arrow}
+                      height={40}
+                      width={40}
+                      alt='arrow'
+                    />
+                  </span>
+                  <span className={styles.button_text}>
+                    Продолжить
+                  </span>
+                </button>
               </div>
             </div>
           )}
 
-          {/* Поля сбора данных временно закомментированы - нет документов для сбора данных пользователей */}
-          {/* 
-          <div className={styles.step}>
-            <p className={styles.step_title}>Адрес забора машины</p>
-            <input
-              type='text'
-              placeholder='Введите адрес'
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              className={styles.input}
-            />
-          </div>
+          {/* 🔹 ШАГ 2: Контакты */}
+          {currentStep === 'contacts' && (
+            <div className={styles.step_content}>
+              {/* 🔙 Кнопка "Назад" */}
+              <button
+                type='button'
+                className={styles.back_button}
+                onClick={handleBack}
+                disabled={isSubmitting}
+              >
+                ← Назад, изменить параметры
+              </button>
 
-          <div className={styles.step}>
-            <p className={styles.step_title}>Ваши контактные данные</p>
-            <div className={styles.contacts_row}>
-              <input
-                type='text'
-                placeholder='Ваше имя'
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                className={styles.input}
-              />
-              <input
-                type='tel'
-                placeholder='Ваш телефон'
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                required
-                className={styles.input}
-              />
-            </div>
-          </div>
+              {/* 🔍 Сводка параметров */}
+              <div className={styles.params_summary}>
+                <p className={styles.summary_title}>Вы выбрали:</p>
+                <p className={styles.summary_text}>{paramsSummary}</p>
+                {/* <p className={styles.summary_price}>
+                  Итого: <strong>{price.toLocaleString('ru-RU')} ₽</strong>
+                </p> */}
+              </div>
 
-          {submitStatus === 'error' && errorMessage && (
-            <div className={styles.message_error}>{errorMessage}</div>
-          )}
-          {submitStatus === 'success' && (
-            <div className={styles.message_success}>
-              Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.
-            </div>
-          )}
-          */}
+              {/* Контактные данные */}
+              <div className={styles.step}>
+                <p className={styles.step_title}>Ваши контактные данные</p>
+                <div className={styles.contacts_row}>
+                  <input
+                    type='text'
+                    placeholder='Ваше имя *'
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    className={styles.input}
+                    disabled={isSubmitting}
+                    autoComplete='name'
+                  />
+                  <input
+                    type='tel'
+                    placeholder='Ваш телефон *'
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    required
+                    className={styles.input}
+                    disabled={isSubmitting}
+                    autoComplete='tel'
+                  />
+                </div>
+              </div>
 
-          {/* Низ: стоимость и кнопка */}
-          <div className={styles.form_bottomRow}>
-            <p>
-              {mode === 'city' ? (
-                <>
-                  Стоимость составит ~{' '}
-                  <strong>{price.toLocaleString('ru-RU')} </strong> ₽
-                </>
-              ) : (
-                <>
-                  Стоимость: <strong>{price.toLocaleString('ru-RU')} </strong> ₽
-                  {kilometers && (
-                    <span className={styles.priceDetails}>
-                      {' '}
-                      ({Math.round(price / parseFloat(kilometers))} ₽/км ×{' '}
-                      {parseFloat(kilometers).toLocaleString('ru-RU')} км)
-                    </span>
-                  )}
-                </>
+              {/* Чекбокс согласия */}
+              <div className={styles.step}>
+                <label className={styles.checkbox_label}>
+                  <input
+                    type='checkbox'
+                    checked={agreed}
+                    onChange={(e) => setAgreed(e.target.checked)}
+                    required
+                    disabled={isSubmitting}
+                  />
+                  <span>
+                    Я согласен с{' '}
+                    <Link href='/privacy' target='_blank' className={styles.policy_link}>
+                      политикой конфиденциальности
+                    </Link>{' '}
+                    *
+                  </span>
+                </label>
+              </div>
+
+              {/* Сообщения об ошибке */}
+              {errorMessage && (
+                <div className={styles.message_error}>{errorMessage}</div>
               )}
-            </p>
 
-            <a
-              href={`tel:${phoneNumber}`}
-              className={styles.CTA_button}
-            >
-              <span className={styles.button_icon} aria-hidden='true'>
-                <Image
-                  src={'/icons/arrow-E1.svg'}
-                  className={styles.button_arrow}
-                  height={40}
-                  width={40}
-                  alt='arrow'
-                />
-              </span>
-              <span className={styles.button_text}>
-                Вызвать эвакуатор
-              </span>
-            </a>
+              {/* Кнопка отправки */}
+              <div className={styles.form_bottomRow}>
+                <p className={styles.final_price}>
+                  Стоимость <strong>{price.toLocaleString('ru-RU')} ₽</strong>
+                </p>
 
-            {/* Временно используем ссылку вместо кнопки submit */}
-            {/* 
-            <button
-              className={styles.CTA_button}
-              type='submit'
-              disabled={isSubmitting}
-            >
-              <span className={styles.button_icon} aria-hidden='true'>
-                <Image
-                  src={'/icons/arrow-E1.svg'}
-                  className={styles.button_arrow}
-                  height={40}
-                  width={40}
-                  alt='arrow'
-                />
-              </span>
-              <span className={styles.button_text}>
-                {isSubmitting ? 'Отправка...' : 'Вызвать эвакуатор'}
-              </span>
-            </button>
-            */}
-          </div>
-        </div>
-        {/* </form> */}
+                <button
+                  className={styles.CTA_button}
+                  type='submit'
+                  disabled={isSubmitting || !agreed}
+                >
+                  <span className={styles.button_icon} aria-hidden='true'>
+                    <Image
+                      src={'/icons/arrow-E1.svg'}
+                      className={styles.button_arrow}
+                      height={40}
+                      width={40}
+                      alt='arrow'
+                    />
+                  </span>
+                  <span className={styles.button_text}>
+                    {isSubmitting ? 'Отправка...' : 'Заказать эвакуатор'}
+                  </span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* 🔹 ШАГ 3: Успешная отправка ✅ */}
+          {currentStep === 'success' && (
+            <div className={styles.success_content}>
+              <div className={styles.success_icon}>
+                <svg
+                  width="80"
+                  height="80"
+                  viewBox="0 0 80 80"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle cx="40" cy="40" r="40" fill="#10B981" />
+                  <path
+                    d="M24 40L36 52L56 28"
+                    stroke="white"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+              
+              <h3 className={styles.success_title}>
+                Заявка успешно отправлена!
+              </h3>
+              
+              <p className={styles.success_text}>
+                Мы свяжемся с вами в ближайшее время по указанному телефону.
+              </p>
+              
+              <p className={styles.success_phone}>
+                Или позвоните нам: <a href={`tel:${phoneNumber}`}>{phoneNumber}</a>
+              </p>
+
+              {/* <button
+                type='button'
+                className={styles.CTA_button}
+                onClick={handleNewRequest}
+              >
+                <span className={styles.button_icon} aria-hidden='true'>
+                  <Image
+                    src={'/icons/arrow-E1.svg'}
+                    className={styles.button_arrow}
+                    height={40}
+                    width={40}
+                    alt='arrow'
+                  />
+                </span>
+                <span className={styles.button_text}>
+                  Отправить ещё заявку
+                </span>
+              </button> */}
+            </div>
+          )}
+        </form>
       </div>
     </section>
   );

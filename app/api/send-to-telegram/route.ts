@@ -69,9 +69,9 @@ export async function POST(request: NextRequest) {
       message += `\n📋 Услуга: *${service.trim()}*`;
     }
 
-    if (address && address.trim() && address !== service) {
-      message += `\n📍 Адрес: ${address.trim()}`;
-    }
+    // if (address && address.trim() && address !== service) {
+    //   message += `\n📍 Адрес: ${address.trim()}`;
+    // }
 
     if (mode || weight) {
       message += `\n\n🚙 *Параметры заказа:*`;

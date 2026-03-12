@@ -1,4 +1,6 @@
+// app/components/mainPage/Services/Services.tsx
 'use client';
+
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -50,6 +52,15 @@ export default function Services() {
     return () => { document.body.style.overflow = ''; };
   }, [isModalOpen]);
 
+  // Обработка закрытия по Esc
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isModalOpen) closeModal();
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [isModalOpen]);
+
   const handleServiceClick = (e: React.MouseEvent, serviceTitle: string) => {
     e.preventDefault();
     setSelectedService(serviceTitle);
@@ -66,76 +77,80 @@ export default function Services() {
     }));
   };
 
+  // 🔥 Функция отправки цели Яндекс.Метрики
+  const sendYandexGoal = (goalId: string) => {
+    if (typeof window !== 'undefined' && (window as any).ym) {
+      try {
+        (window as any).ym(106319272, 'reachGoal', goalId);
+        console.log(`✅ Yandex Metrika goal sent: ${goalId}`);
+      } catch (error) {
+        console.error('❌ Error sending Yandex Metrika goal:', error);
+      }
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  
-  if (!formData.agreed) {
-    alert('Необходимо согласие с политикой конфиденциальности');
-    return;
-  }
-  
-  if (!formData.phone.trim() || !formData.name.trim()) {
-    alert('Пожалуйста, заполните все поля');
-    return;
-  }
-
-  setIsSubmitting(true);
-  setSubmitStatus('idle');
-
-  try {
-    // 🔥 Исправленный URL
-    const response = await fetch('/api/send-to-telegram', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: formData.name.trim(),
-        phone: formData.phone.trim(),
-        service: selectedService,
-        agreed: formData.agreed,
-        // Пустые значения для совместимости с существующим роутом
-        address: '',
-        mode: '',
-        weight: '',
-        kilometers: '',
-        price: '',
-      }),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result.error || 'Ошибка отправки');
+    e.preventDefault();
+    
+    if (!formData.agreed) {
+      alert('Необходимо согласие с политикой конфиденциальности');
+      return;
+    }
+    
+    if (!formData.phone.trim() || !formData.name.trim()) {
+      alert('Пожалуйста, заполните все поля');
+      return;
     }
 
-    setSubmitStatus('success');
-    
-    setTimeout(() => {
-      setIsModalOpen(false);
-      setSubmitStatus('idle');
-    }, 2000);
-    
-  } catch (error) {
-    console.error('Ошибка отправки:', error);
-    setSubmitStatus('error');
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    try {
+      const response = await fetch('/api/send-to-telegram', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          phone: formData.phone.trim(),
+          service: selectedService,
+          agreed: formData.agreed,
+          address: '',
+          mode: '',
+          weight: '',
+          kilometers: '',
+          price: '',
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Ошибка отправки');
+      }
+
+      setSubmitStatus('success');
+      
+      // 🔥 ОТПРАВЛЯЕМ ЦЕЛЬ: service_form (форма с карточек)
+      sendYandexGoal('service_form');
+      
+      setTimeout(() => {
+        setIsModalOpen(false);
+        setSubmitStatus('idle');
+      }, 2000);
+      
+    } catch (error) {
+      console.error('Ошибка отправки:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const closeModal = () => {
     setIsModalOpen(false);
     setFormData({ name: '', phone: '', agreed: false });
     setSubmitStatus('idle');
   };
-
-  // Обработка закрытия по Esc
-  useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isModalOpen) closeModal();
-    };
-    window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
-  }, [isModalOpen]);
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -256,7 +271,7 @@ export default function Services() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
-                    placeholder="+7 (999) 999-99-99"
+                    placeholder="+7 (999) 123-45-67"
                     pattern="^[\d\s\+\-\(\)]{10,}$"
                     required
                     disabled={isSubmitting}
@@ -276,7 +291,7 @@ export default function Services() {
                     />
                     <span>
                       Я согласен с{' '}
-                      <Link href="/privacy-policy.pdf" target="_blank" className={styles.policy_link}>
+                      <Link href="/privacy" target="_blank" className={styles.policy_link}>
                         политикой конфиденциальности
                       </Link>{' '}
                       *
