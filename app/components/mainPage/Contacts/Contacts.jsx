@@ -6,6 +6,14 @@ import { YMaps, Map, Placemark } from '@pbe/react-yandex-maps';
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 
+// Вспомогательная функция для отправки целей в Яндекс.Метрику
+// Используем проверку через строку для совместимости с JS
+const sendYandexGoal = (goalId) => {
+  if (typeof window !== 'undefined' && typeof window.ym === 'function') {
+    window.ym(106319272, 'reachGoal', goalId);
+  }
+};
+
 // Адреса филиалов с координатами
 const offices = [
   {
@@ -58,15 +66,13 @@ function calculateMapBounds(coordinates) {
   const centerLat = (minLat + maxLat) / 2;
   const centerLng = (minLng + maxLng) / 2;
 
-  // Вычисляем примерный зум на основе размаха координат с запасом
   const latDiff = maxLat - minLat;
   const lngDiff = maxLng - minLng;
   const maxDiff = Math.max(latDiff, lngDiff);
 
-  // Добавляем запас (padding) для меток по краям
   const padding = 0.01;
 
-  let zoom = 13; // Уменьшаем начальный зум, чтобы показать больше
+  let zoom = 13;
   if (maxDiff + padding * 2 > 0.05) zoom = 11;
   else if (maxDiff + padding * 2 > 0.03) zoom = 12;
   else if (maxDiff + padding * 2 > 0.02) zoom = 13;
@@ -98,13 +104,11 @@ export default function YandexMap() {
   const mapBounds = calculateMapBounds(allCoordinates);
   const mainOffice = offices.find((office) => office.isMain);
 
-  // Устанавливаем bounds после загрузки карты
   useEffect(() => {
     if (mapRef.current) {
       const timer = setTimeout(() => {
         const map = mapRef.current;
         if (map && typeof map.getBounds === 'function') {
-          // Пытаемся установить bounds для показа всех меток
           try {
             const bounds = map.geoObjects.getBounds();
             if (bounds) {
@@ -115,7 +119,6 @@ export default function YandexMap() {
               });
             }
           } catch (e) {
-            // Если не получилось, используем дефолтные значения
             console.log('Bounds setting failed, using default zoom');
           }
         }
@@ -191,7 +194,10 @@ export default function YandexMap() {
               <Link href='mailto:evak-kemerovo@yandex.ru'>
                 <p>evak-kemerovo@yandex.ru</p>
               </Link>
-              <Link href='tel:+7(923)480-70-70'>
+              <Link 
+                href='tel:+7(923)480-70-70'
+                onClick={() => sendYandexGoal('telephone')}
+              >
                 <p>+7(923)480-70-70</p>
               </Link>
             </div>
@@ -202,15 +208,17 @@ export default function YandexMap() {
                 target='_blank'
                 rel='noopener noreferrer'
                 className={styles.info_block_bottom_item}
+                onClick={() => sendYandexGoal('max')}
               >
                 <p>Max</p>
-                <img src='/icons/max-blue.svg' alt='Email' />
+                <img src='/icons/max-blue.svg' alt='Max' />
               </a>
               <a
                 href='https://t.me/avtohelp142'
                 target='_blank'
                 rel='noopener noreferrer'
                 className={styles.info_block_bottom_item}
+                onClick={() => sendYandexGoal('telegram')}
               >
                 <p>Telegram</p>
                 <img src='/icons/tg-blue.svg' alt='Telegram' />

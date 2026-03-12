@@ -5,6 +5,20 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import styles from './Header.module.scss';
 
+// Типизируем глобальную функцию ym для TypeScript
+declare global {
+  interface Window {
+    ym?: (counterId: number, command: string, goalId: string, options?: any) => void;
+  }
+}
+
+// Вспомогательная функция для отправки целей в Яндекс.Метрику
+const sendYandexGoal = (goalId: string) => {
+  if (typeof window !== 'undefined' && window.ym) {
+    window.ym(106319272, 'reachGoal', goalId);
+  }
+};
+
 export default function Header() {
   const phone = process.env.NEXT_PUBLIC_CONTACT_PHONE || '+7(923)480-70-70';
   const address = 'г.Кемерово, пр-кт Кузнецкий, 83/2';
@@ -172,6 +186,7 @@ export default function Header() {
                 target='_blank'
                 rel='noopener noreferrer'
                 className={styles.socialBtn}
+                onClick={() => sendYandexGoal('telegram')}
               >
                 <span className={styles.iconWrap}>
                   <Image
@@ -189,6 +204,7 @@ export default function Header() {
                 target='_blank'
                 rel='noopener noreferrer'
                 className={styles.socialBtn}
+                onClick={() => sendYandexGoal('max')}
               >
                 <span className={styles.iconWrap}>
                   <Image
@@ -210,6 +226,7 @@ export default function Header() {
               target='_blank'
               rel='noopener noreferrer'
               className={styles.mobile_social_icon}
+              onClick={() => sendYandexGoal('telegram')}
             >
               <Image
                 src='/icons/tg.svg'
@@ -223,6 +240,7 @@ export default function Header() {
               target='_blank'
               rel='noopener noreferrer'
               className={styles.mobile_social_icon}
+              onClick={() => sendYandexGoal('max')}
             >
               <Image
                 src='/icons/max.svg'
@@ -305,7 +323,11 @@ export default function Header() {
             </Link>
           </nav>
           <div className={styles.mobileContacts}>
-            <Link href={`tel:${phone}`} className={styles.mobilePhone}>
+            <Link 
+              href={`tel:${phone}`} 
+              className={styles.mobilePhone}
+              onClick={() => sendYandexGoal('telephone')}
+            >
               <span>{phone}</span>
             </Link>
             <div className={styles.mobileAddress}>
@@ -316,6 +338,7 @@ export default function Header() {
                 href='https://t.me/avtohelp142'
                 target='_blank'
                 rel='noopener noreferrer'
+                onClick={() => sendYandexGoal('telegram')}
               >
                 <Image
                   src='/icons/tg.svg'
@@ -328,6 +351,7 @@ export default function Header() {
                 href='https://max.ru/u/f9LHodD0cOJKIJtCLzt9R39PdOR-MG1fi9sdMh9cEZzuXB-ca-EqbrqgtN4'
                 target='_blank'
                 rel='noopener noreferrer'
+                onClick={() => sendYandexGoal('max')}
               >
                 <Image src='/icons/max.svg' alt='MAX' width={24} height={24} />
               </a>

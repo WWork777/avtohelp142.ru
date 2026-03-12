@@ -1,5 +1,20 @@
+"use client";
 import Image from "next/image";
 import styles from "./Hero.module.scss";
+
+// Типизируем глобальную функцию ym для TypeScript
+declare global {
+  interface Window {
+    ym?: (counterId: number, command: string, goalId: string, options?: any) => void;
+  }
+}
+
+// Вспомогательная функция для отправки целей в Яндекс.Метрику
+const sendYandexGoal = (goalId: string) => {
+  if (typeof window !== 'undefined' && window.ym) {
+    window.ym(106319272, 'reachGoal', goalId);
+  }
+};
 
 export default function Hero() {
   return (
@@ -13,7 +28,11 @@ export default function Hero() {
             Приедем в течение 20 мин
           </p>
         </div>
-        <a className={styles.CTA_button} href="tel:+79234807070">
+        <a 
+          className={styles.CTA_button} 
+          href="tel:+79234807070"
+          onClick={() => sendYandexGoal('telephone')}
+        >
           <span className={styles.button_icon} aria-hidden="true">
             <Image
               src={"/icons/arrow-gray.svg"}

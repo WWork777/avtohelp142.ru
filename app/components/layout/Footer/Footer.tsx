@@ -12,6 +12,13 @@ export default function Footer() {
   const pathname = usePathname();
   const router = useRouter();
 
+  // Функция для отправки целей Яндекс.Метрики
+  const sendMetricaGoal = (goal: string) => {
+    if (typeof window !== "undefined" && typeof (window as any).ym !== "undefined") {
+      (window as any).ym(106319272, "reachGoal", goal);
+    }
+  };
+
   const handleLinkClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
     href: string,
@@ -128,6 +135,7 @@ export default function Footer() {
               href="https://t.me/avtohelp142"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => sendMetricaGoal("telegram")}
             >
               <Image
                 className={styles.icon}
@@ -141,6 +149,7 @@ export default function Footer() {
               href="https://max.ru/u/f9LHodD0cOJKIJtCLzt9R39PdOR-MG1fi9sdMh9cEZzuXB-ca-EqbrqgtN4"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => sendMetricaGoal("max")}
             >
               <Image
                 className={styles.icon}
@@ -152,7 +161,9 @@ export default function Footer() {
             </a>
           </div>
           <a href={`mailto:${email}`}>{email}</a>
-          <a href={`tel:${phone}`}>{phone}</a>
+          <a href={`tel:${phone}`} onClick={() => sendMetricaGoal("telephone")}>
+            {phone}
+          </a>
           <a
             href={`https://yandex.ru/maps/?text=${encodeURIComponent(address)}`}
             target="_blank"
