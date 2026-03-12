@@ -428,7 +428,7 @@ export default function Form() {
                   />
                   <span>
                     Я согласен с{' '}
-                    <Link href='/privacy' target='_blank' className={styles.policy_link}>
+                    <Link href='/privacy-policy.pdf' target='_blank' className={styles.policy_link}>
                       политикой конфиденциальности
                     </Link>{' '}
                     *
