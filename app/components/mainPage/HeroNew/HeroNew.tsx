@@ -171,6 +171,7 @@ export default function TowTruckHero() {
                 >
                   ВЫЗВАТЬ ЭВАКУАТОР <span className={styles.arrow}>→</span>
                 </a>
+                {/* <p className={styles.promo}>🔥 Запишись сейчас- диагностика бесплатно</p> */}
               </div>
               
               {/* Кнопка "Рассчитать" с правильной обработкой якоря */}
@@ -203,7 +204,7 @@ export default function TowTruckHero() {
             </div>
             <div className={styles.statBox}>
               <span className={styles.statIcon}>⏳</span>
-              <div className={styles.statVal}>14:30</div>
+              <div className={styles.statVal}>14 минут</div>
               <div className={styles.statLabel}>СРЕД. ВРЕМЯ ПОДАЧИ</div>
             </div>
           </div>
