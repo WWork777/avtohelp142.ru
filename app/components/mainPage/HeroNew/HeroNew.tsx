@@ -3,6 +3,7 @@
 import React, { useState, FormEvent, ChangeEvent } from 'react';
 import styles from './HeroNew.module.scss';
 import OrderModal from '../ModalNew/ModalNew';
+import Image from 'next/image';
 // --- Утилиты из твоего кода ---
 declare global {
   interface Window {
@@ -77,6 +78,16 @@ export default function TowTruckHero() {
       setIsSubmitting(false);
     }
   };
+
+  const handleExternalLink = (e: React.MouseEvent, goalId: string, href: string) => {
+      e.preventDefault();
+      sendYandexGoal(goalId);
+      
+      // Небольшая задержка для гарантии отправки события перед переходом
+      setTimeout(() => {
+        window.open(href, '_blank', 'noopener,noreferrer');
+      }, 150);
+    };
 
   return (
     <section className={styles.hero}>
@@ -186,6 +197,17 @@ export default function TowTruckHero() {
         rel="noopener noreferrer"
       >
         <span className={styles.floating_button_text}>Перейти на сайт СТО</span>
+      </a>
+      <a
+        href="tel:+79234807070" 
+            onClick={(e) => handleExternalLink(e, 'call_clicked', 'tel:+79234807070')}
+
+        className={styles.floating_button2}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Image src="icons/phone.svg" width="20" height="20" alt="phone"/>
+        <span className={styles.floating_button_text}>Звонок</span>
       </a>
     </section>
   );

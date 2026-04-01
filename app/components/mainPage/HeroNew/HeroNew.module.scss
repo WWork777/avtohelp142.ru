@@ -356,6 +356,9 @@ font-style: oblique;
   white-space: nowrap;
 }
 
+
+
+
 @keyframes slideIn {
   from { 
     transform: translateX(100%) scale(0.8); 
@@ -373,5 +376,53 @@ font-style: oblique;
   }
   50% { 
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); 
+  }
+}
+
+
+.floating_button2 {
+max-width: 30%;
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #333333;
+  padding: 16px 32px;
+  border-radius: 50px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  font-weight: 600;
+  font-size: 1rem;
+  animation: slideIn 0.5s ease-out, gentlePulse 3s infinite 0.5s;
+
+  &:hover {
+    background: #ffffff;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  }
+
+  &:active {
+    transform: translateY(-1px) scale(1.01);
+  }
+
+  @media (max-width: 992px) {
+    bottom: 20px;
+    right: 20px;
+    padding: 14px 24px;
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    gap: 8px;
   }
 }
