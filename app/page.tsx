@@ -1,7 +1,9 @@
-import Hero from './components/mainPage/Hero/Hero';
+// import Hero from './components/mainPage/Hero/Hero';
 import Services from './components/mainPage/Services/Services';
 // import Price from './components/mainPage/Price/Price';
-import Form from './components/mainPage/Form/Form';
+import HeroNew from './components/mainPage/HeroNew/HeroNew'
+import FormNew from './components/mainPage/FormNew/FormNew'
+// import Form from './components/mainPage/Form/Form';
 import Gallery from './components/mainPage/Gallery/Gallery';
 import Contacts from './components/mainPage/Contacts/Contacts';
 import AnchorHandler from './components/mainPage/AnchorHandler';
@@ -22,10 +24,12 @@ export default function Home() {
   return (
     <>
       <AnchorHandler />
-      <Hero />
+      <HeroNew />
+      {/* <Hero /> */}
       <Services />
       {/* <Price /> */}
-      <Form />
+      <FormNew />
+      {/* <Form /> */}
       <Gallery />
       <Contacts />
     </>

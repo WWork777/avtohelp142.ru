@@ -129,7 +129,7 @@ export default function Hero() {
         {/* Левая колонка: заголовок + описание */}
         <div className={styles.hero_left}>
           <div className={styles.hero_top}>
-            <h1>Эвакуатор в Кемерово</h1>
+            <h1>ЭВАКУАТОР<strong> КЕМЕРОВО</strong></h1>
             <div className={styles.line} />
           </div>
           

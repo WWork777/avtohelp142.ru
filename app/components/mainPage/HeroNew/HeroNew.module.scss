@@ -1,0 +1,377 @@
+$yellow: #ffdd00;
+$dark: #0f172a;
+$gray-text: #64748b;
+$bg-light: #f8fafc;
+
+.hero {
+  padding: 60px 20px;
+  display: flex;
+  justify-content: center;
+//   font-family: 'Inter', sans-serif; // Убедись, что шрифт подключен
+
+  .container {
+    margin-top: 50px;
+    max-width: 1100px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 40px;
+    align-items: center;
+
+    @media (max-width: 992px) {
+      grid-template-columns: 1fr;
+      text-align: left;
+      margin-top: 20px;
+    }
+  }
+  @media (max-width: 992px) {
+        padding: 20px 15px;
+
+    }
+}
+
+.badge {
+    margin-top: 70px;
+  background: $yellow;
+font-style: oblique;
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-weight: 800;
+  font-size: 14px;
+//   margin-bottom: 24px;
+      --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.title {
+  font-size: 64px;
+  line-height: 1.1;
+  font-weight: 900;
+  color: $dark;
+  margin-bottom: 30px;
+
+  .highlight {
+    color: $yellow;
+  }
+
+  @media (max-width: 576px) {
+    font-size: 50px;
+  }
+}
+
+.features {
+  list-style: none;
+  padding: 24px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  margin-bottom: 40px;
+  text-align: left;
+
+  li {
+    line-height: 1.625;
+    color: #374151;
+    margin-bottom: 16px;
+    padding-left: 28px;
+    font-size: 18px;
+    font-weight: 500;
+    position: relative;
+
+    &::before {
+      content: '✔';
+      position: absolute;
+      left: 0;
+      color: $yellow;
+      font-weight: bold;
+    }
+
+    span {
+      background: #fff9c4;
+      font-weight: 600;
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+
+  @media (max-width: 576px) {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+// .btnWrapper{
+//     display: flex;
+//     flex-direction: column;
+// }
+.btnPrimary {
+  background: $yellow; // Ваш основной желтый
+  border: none;
+  display: block;
+  padding: 18px 32px;
+  border-radius: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: transform 0.2s, box-shadow 0.3s ease;
+  
+  // Применяем мягкую анимацию
+  animation: gentleGlow 4s ease-in-out infinite;
+    
+  &:hover { 
+    transform: translateY(-2px); 
+    // При наведении можно зафиксировать свечение чуть ярче
+    animation-play-state: paused; 
+    box-shadow: 0 0 15px 2px rgba(255, 196, 14, 0.3);
+  }
+  @media (max-width: 992px) {
+    width: 350px;
+  }
+}
+
+@keyframes gentleGlow {
+  0%, 100% {
+    // В покое — очень тонкая, едва заметная кайма (как на фото)
+    box-shadow: 0 0 0 4px rgba(255, 196, 14, 0.15);
+  }
+  50% {
+    // В пике — чуть расширяется и становится мягче
+    box-shadow: 0 0 20px 8px rgba(255, 196, 14, 0.25);
+  }
+
+  
+}
+
+.promo {
+  font-size: 12px;
+  color: #ef4444;
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+.btnSecondary {
+  background: white;
+  border: 1px solid #e2e8f0;
+  padding: 18px 32px;
+  border-radius: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.3s ease;
+
+
+  &:hover{
+    transform: translateY(-2px); 
+    border: 1px solid $yellow;
+  }
+  
+  @media (max-width: 992px) {
+    width: 350px;
+  }
+}
+
+// Карточка статуса
+.statusCard {
+  background: white;
+  padding: 30px;
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+      --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  .cardHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    
+    h3 { font-size: 18px; margin: 0; }
+    p { font-size: 12px; color: $gray-text; margin: 4px 0 0; }
+  }
+}
+
+.onlineDot {
+  width: 10px;
+  height: 10px;
+  background: #22c55e;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.statBox {
+  background: $bg-light;
+  padding: 16px;
+  border-radius: 16px;
+  text-align: center;
+
+  .statVal { font-size: 20px; font-weight: 800; }
+  .statLabel { font-size: 10px; color: $gray-text; font-weight: 700; }
+}
+
+.mapPreview {
+  height: 180px;
+  background: url('../../../../public/images/city-map.webp') center/cover;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.mapBtn {
+  background: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  cursor: pointer;
+}
+
+.infoFooter {
+  background: #eff6ff;
+  padding: 12px;
+  border-radius: 12px;
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: #1e40af;
+  line-height: 1.4;
+}
+
+
+
+
+.form {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.inputsRow {
+  display: flex;
+  gap: 12px;
+  
+  input {
+    flex: 1;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+
+    &:focus {
+      border-color: #ffdd00;
+    }
+  }
+
+  @media (max-width: 576px) {
+    flex-direction: column;
+  }
+}
+
+.successMsg {
+  color: #22c55e;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.errorMsg {
+  color: #ef4444;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.btnPrimary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+// Floating button
+.floating_button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #333333;
+  padding: 16px 32px;
+  border-radius: 50px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  font-weight: 600;
+  font-size: 1rem;
+  animation: slideIn 0.5s ease-out, gentlePulse 3s infinite 0.5s;
+
+  &:hover {
+    background: #ffffff;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  }
+
+  &:active {
+    transform: translateY(-1px) scale(1.01);
+  }
+
+  @media (max-width: 992px) {
+    bottom: 20px;
+    right: 20px;
+    padding: 14px 24px;
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    gap: 8px;
+  }
+}
+
+.floating_button_text {
+  font-size: inherit;
+  font-weight: inherit;
+  white-space: nowrap;
+}
+
+@keyframes slideIn {
+  from { 
+    transform: translateX(100%) scale(0.8); 
+    opacity: 0; 
+  }
+  to { 
+    transform: translateX(0) scale(1); 
+    opacity: 1; 
+  }
+}
+
+@keyframes gentlePulse {
+  0%, 100% { 
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); 
+  }
+  50% { 
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); 
+  }
+}

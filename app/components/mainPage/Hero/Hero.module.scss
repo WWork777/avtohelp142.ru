@@ -6,22 +6,23 @@
 
 .hero {
   margin: 0;
-  background: url("/images/Form_Back.jpg") center / cover no-repeat;
+  // background: url("/images/Form_Back.jpg") center / cover no-repeat;
+  background-color: white;
   min-height: 100vh;
   position: relative;
   padding: 0;
 
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.35) 0%,
-      rgba(0, 0, 0, 0.575) 100%
-    );
-    z-index: 1;
-  }
+  // &::before {
+  //   content: "";
+  //   position: absolute;
+  //   inset: 0;
+  //   background: linear-gradient(
+  //     180deg,
+  //     rgba(0, 0, 0, 0.35) 0%,
+  //     rgba(0, 0, 0, 0.575) 100%
+  //   );
+  //   z-index: 1;
+  // }
 
   > * {
     position: relative;
@@ -94,12 +95,12 @@
     margin-bottom: 0;
 
 
-  h1 {
+  h1, strong {
     margin: 0;
-    color: #ffffff;
+    color: #111827;
     font-size: 56px;
     font-weight: 700;
-    text-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+    // text-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
     line-height: 1.2;
 
     @media (max-width: 1440px) { font-size: 48px; }
@@ -111,6 +112,10 @@
     @media (max-width: 480px) {
       font-size: 28px;
     }
+    strong {
+      color: #fde047;
+    }
+  
   }
 
   .line {
