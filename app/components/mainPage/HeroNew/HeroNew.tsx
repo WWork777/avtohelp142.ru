@@ -181,7 +181,6 @@ export default function TowTruckHero() {
           <OrderModal 
   isOpen={isModalOpen} 
   onClose={() => setIsModalOpen(false)} 
-  formatPhone={formatPhone} // Используем ту же функцию форматирования
 />
           <div className={styles.infoFooter}>
             {/* <span className={styles.infoIcon}>i</span> */} <img src="/icons/inform.svg" alt="Arrow" width="20" height="20" />

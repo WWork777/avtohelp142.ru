@@ -66,15 +66,17 @@ const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     
     if (name === 'phone') {
       setFormData(prev => ({ ...prev, phone: formatPhone(value) }));
+    } else if (name === 'agreed') {
+      // ✅ Type guard: checked есть только у input
+      const checked = (e.target as HTMLInputElement).checked;
+      setFormData(prev => ({ ...prev, agreed: checked }));
     } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: type === 'checkbox' ? checked : value,
-      }));
+      // Для select и обычных input
+      setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
 
