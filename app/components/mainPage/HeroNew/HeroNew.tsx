@@ -4,7 +4,9 @@ import React, { useState, FormEvent, ChangeEvent } from 'react';
 import styles from './HeroNew.module.scss';
 import OrderModal from '../ModalNew/ModalNew';
 import Image from 'next/image';
-// --- Утилиты из твоего кода ---
+import { useRouter } from 'next/navigation';
+
+// --- Утилиты ---
 declare global {
   interface Window {
     ym?: (counterId: number, command: string, goalId: string, options?: any) => void;
@@ -15,6 +17,49 @@ const sendYandexGoal = (goalId: string) => {
   if (typeof window !== 'undefined' && window.ym) {
     window.ym(106319272, 'reachGoal', goalId);
   }
+};
+
+// Функция плавного скролла к якорю (универсальная)
+const scrollToAnchor = (targetId: string) => {
+  let attempts = 0;
+  const maxAttempts = 10;
+  
+  const tryScroll = () => {
+    const targetElement = document.getElementById(targetId);
+    if (targetElement) {
+      const headerHeight = 100; // Высота хедера
+      const targetPosition = targetElement.offsetTop - headerHeight;
+      window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth',
+      });
+      return true;
+    }
+    
+    attempts++;
+    if (attempts < maxAttempts) {
+      setTimeout(tryScroll, 100);
+    }
+    return false;
+  };
+  
+  tryScroll();
+};
+
+// Обработчик клика по якорной ссылке
+const handleAnchorClick = (e: React.MouseEvent, targetId: string, pathname: string, router: ReturnType<typeof useRouter>) => {
+  e.preventDefault();
+  
+  // Если не на главной — переходим с якорем
+  if (pathname !== '/') {
+    router.push(`/#${targetId}`, { scroll: false });
+    setTimeout(() => scrollToAnchor(targetId), 300);
+    return;
+  }
+  
+  // Если на главной — просто скроллим
+  scrollToAnchor(targetId);
+  window.history.pushState(null, '', `/#${targetId}`);
 };
 
 const formatPhone = (value: string): string => {
@@ -38,6 +83,9 @@ type SubmitStatus = 'idle' | 'success' | 'error';
 
 // --- Компонент ---
 export default function TowTruckHero() {
+  const router = useRouter();
+  const pathname = typeof window !== 'undefined' ? window.location.pathname : '/';
+  
   const [formData, setFormData] = useState({ name: '', phone: '', agreed: true });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle');
@@ -83,11 +131,16 @@ export default function TowTruckHero() {
       e.preventDefault();
       sendYandexGoal(goalId);
       
-      // Небольшая задержка для гарантии отправки события перед переходом
       setTimeout(() => {
         window.open(href, '_blank', 'noopener,noreferrer');
       }, 150);
-    };
+  };
+
+  // Обработчик для кнопки "Рассчитать"
+  const handleCalculateClick = (e: React.MouseEvent) => {
+    sendYandexGoal('calculate_clicked'); // Трекаем клик по кнопке
+    handleAnchorClick(e, 'form', pathname, router);
+  };
 
   return (
     <section className={styles.hero}>
@@ -109,49 +162,31 @@ export default function TowTruckHero() {
           </div>
 
           <form className={styles.form} onSubmit={handleSubmit}>
-            {/* <div className={styles.inputsRow}>
-              <input 
-                type="text" 
-                name="name" 
-                placeholder="Ваше имя" 
-                value={formData.name} 
-                onChange={handleInputChange} 
-                required 
-              />
-              <input 
-                type="tel" 
-                name="phone" 
-                placeholder="+7 (___) ___-__-__" 
-                value={formData.phone} 
-                onChange={handleInputChange} 
-                required 
-              />
-            </div> */}
-            
             <div className={styles.actions}>
               <div className={styles.btnWrapper}>
-                    <a 
-                        href="tel:+79234807070" 
-                        className={styles.btnPrimary}
-                        onClick={() => sendYandexGoal('call_clicked')} // Опционально: трекаем клик по звонку
-                    >
-                        ВЫЗВАТЬ ЭВАКУАТОР <span className={styles.arrow}>→</span>
-                    </a>
-                    {/* <p className={styles.promo}>🔥 Выгода -10% на первый вызов</p> */}
-                    </div>
+                <a 
+                  href="tel:+79234807070" 
+                  className={styles.btnPrimary}
+                  onClick={() => sendYandexGoal('call_clicked')}
+                >
+                  ВЫЗВАТЬ ЭВАКУАТОР <span className={styles.arrow}>→</span>
+                </a>
+              </div>
               
-             
-              <button  type="button" className={styles.btnSecondary}>
-                <img src="/icons/calc.svg" alt="Arrow" width="20" height="20" />Рассчитать
+              {/* Кнопка "Рассчитать" с правильной обработкой якоря */}
+              <button 
+                type="button" 
+                className={styles.btnSecondary}
+                onClick={handleCalculateClick}
+              >
+                <img src="/icons/calc.svg" alt="Calc" width="20" height="20" />
+                Рассчитать
               </button>
             </div>
-            
-            {/* {submitStatus === 'success' && <p className={styles.successMsg}>Заявка успешно отправлена!</p>}
-            {submitStatus === 'error' && <p className={styles.errorMsg}>Ошибка. Попробуйте еще раз.</p>} */}
           </form>
         </div>
 
-        {/* Правая часть остается без изменений */}
+        {/* Правая часть */}
         <div className={styles.statusCard}>
           <div className={styles.cardHeader}>
             <div>
@@ -174,16 +209,19 @@ export default function TowTruckHero() {
           </div>
           <div className={styles.mapPreview}>
             <button 
-            className={styles.mapBtn} 
-            onClick={() => setIsModalOpen(true)} // Теперь кнопка на карте открывает модалку
-            > <img src="/icons/place.svg" alt="Arrow" width="20" height="20" /> Найти ближайший</button>
+              className={styles.mapBtn} 
+              onClick={() => setIsModalOpen(true)}
+            > 
+              <img src="/icons/place.svg" alt="Place" width="20" height="20" /> 
+              Найти ближайший
+            </button>
           </div>
           <OrderModal 
-  isOpen={isModalOpen} 
-  onClose={() => setIsModalOpen(false)} 
-/>
+            isOpen={isModalOpen} 
+            onClose={() => setIsModalOpen(false)} 
+          />
           <div className={styles.infoFooter}>
-            {/* <span className={styles.infoIcon}>i</span> */} <img src="/icons/inform.svg" alt="Arrow" width="20" height="20" />
+            <img src="/icons/inform.svg" alt="Info" width="20" height="20" />
             <p>Работаем во всех округах Кемерово. Принимаем карты, наличные и переводы.</p>
           </div>
         </div>
@@ -199,8 +237,7 @@ export default function TowTruckHero() {
       </a>
       <a
         href="tel:+79234807070" 
-            onClick={(e) => handleExternalLink(e, 'call_clicked', 'tel:+79234807070')}
-
+        onClick={(e) => handleExternalLink(e, 'call_clicked', 'tel:+79234807070')}
         className={styles.floating_button2}
         target="_blank"
         rel="noopener noreferrer"

@@ -5,18 +5,44 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import styles from './Header.module.scss';
 
-// Типизируем глобальную функцию ym для TypeScript
 declare global {
   interface Window {
     ym?: (counterId: number, command: string, goalId: string, options?: any) => void;
   }
 }
 
-// Вспомогательная функция для отправки целей в Яндекс.Метрику
 const sendYandexGoal = (goalId: string) => {
   if (typeof window !== 'undefined' && window.ym) {
     window.ym(106319272, 'reachGoal', goalId);
   }
+};
+
+// Универсальная функция для плавного скролла к якорю
+const scrollToAnchor = (targetId: string) => {
+  // Пробуем несколько раз с интервалом, на случай если элемент ещё не отрендерился
+  let attempts = 0;
+  const maxAttempts = 10;
+  
+  const tryScroll = () => {
+    const targetElement = document.getElementById(targetId);
+    if (targetElement) {
+      const headerHeight = 100;
+      const targetPosition = targetElement.offsetTop - headerHeight;
+      window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth',
+      });
+      return true;
+    }
+    
+    attempts++;
+    if (attempts < maxAttempts) {
+      setTimeout(tryScroll, 100);
+    }
+    return false;
+  };
+  
+  tryScroll();
 };
 
 export default function Header() {
@@ -30,11 +56,34 @@ export default function Header() {
   const [isPastHero, setIsPastHero] = useState(false);
 
   useEffect(() => {
+    // Обработка хэша при загрузке страницы и изменении pathname
+    const handleHash = () => {
+      const hash = window.location.hash;
+      if (hash && hash.length > 1) {
+        const targetId = hash.substring(1);
+        // Небольшая задержка чтобы контент точно отрендерился
+        setTimeout(() => {
+          scrollToAnchor(targetId);
+        }, 300);
+      }
+    };
+
+    // Вызываем при монтировании и при изменении pathname
+    handleHash();
+    
+    // Слушаем изменения hash в URL
+    window.addEventListener('hashchange', handleHash);
+    
+    return () => {
+      window.removeEventListener('hashchange', handleHash);
+    };
+  }, [pathname]);
+
+  useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
       setIsScrolled(scrollTop > 50);
 
-      // Проверяем, прошли ли мы Hero секцию
       const heroElement = document.getElementById('hero');
       if (heroElement) {
         const heroBottom = heroElement.offsetTop + heroElement.offsetHeight;
@@ -42,12 +91,9 @@ export default function Header() {
       }
     };
 
-    // Вызываем сразу для начального состояния
     handleScroll();
-
     window.addEventListener('scroll', handleScroll);
 
-    // Очистка при размонтировании
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -57,69 +103,34 @@ export default function Header() {
     } else {
       document.body.style.overflow = '';
     }
-
     return () => {
       document.body.style.overflow = '';
     };
   }, [menuOpen]);
 
-  const handleLinkClick = (
+  // Универсальный обработчик для якорных ссылок
+  const handleAnchorLink = (
     e: React.MouseEvent<HTMLAnchorElement>,
     href: string
   ) => {
-    if (href.startsWith('#')) {
-      e.preventDefault();
-      const targetId = href.substring(1);
-
-      // Если мы не на главной странице, переходим на главную с якорем
-      if (pathname !== '/' && pathname !== '/цены' && pathname !== '/ceny') {
-        window.location.href = `/${href}`;
-        setMenuOpen(false);
-        return;
-      }
-
-      // Если мы на главной странице или странице цен, скроллим к элементу
-      const targetElement = document.getElementById(targetId);
-
-      if (targetElement) {
-        const headerHeight = 100; // Высота хедера
-        const targetPosition = targetElement.offsetTop - headerHeight;
-
-        window.scrollTo({
-          top: targetPosition,
-          behavior: 'smooth',
-        });
-      }
-
-      setMenuOpen(false);
-    }
-  };
-
-  const handlePricesLinkClick = (
-    e: React.MouseEvent<HTMLAnchorElement>
-  ) => {
-    e.preventDefault();
-    const targetId = 'form';
+    if (!href.includes('#')) return;
     
-    // Если мы не на странице цен, переходим на неё с якорем
-    if (pathname !== '/цены' && pathname !== '/ceny') {
-      window.location.href = '/цены/#form';
-      setMenuOpen(false);
+    e.preventDefault();
+    const hashIndex = href.indexOf('#');
+    const targetId = href.substring(hashIndex + 1);
+    setMenuOpen(false);
+
+    // Если мы не на главной — переходим на главную с якорем
+    if (pathname !== '/') {
+      router.push(`/#${targetId}`, { scroll: false });
+      setTimeout(() => scrollToAnchor(targetId), 300);
       return;
     }
-    
-    // Если мы уже на странице цен, просто скроллим к калькулятору
-    const targetElement = document.getElementById(targetId);
-    if (targetElement) {
-      const headerHeight = 100;
-      const targetPosition = targetElement.offsetTop - headerHeight;
-      window.scrollTo({
-        top: targetPosition,
-        behavior: 'smooth',
-      });
-    }
-    
-    setMenuOpen(false);
+
+    // Если уже на главной — просто скроллим
+    scrollToAnchor(targetId);
+    // Обновляем URL без перезагрузки
+    window.history.pushState(null, '', `/#${targetId}`);
   };
 
   return (
@@ -130,56 +141,28 @@ export default function Header() {
         menuOpen ? styles.menuOpen : ''
       }`}
     >
-      {/* Остальной код без изменений */}
       <div>
         <div className={styles.inner}>
-          {/* Логотип с текстом - виден на мобильных */}
           <Link href='/' className={styles.mobile_logo_header}>
             <Image src='/images/garagelogo.svg' alt='Логотип' width={140} height={70} priority />
           </Link>
 
-          {/* Навигация desktop */}
           <div className={styles.right_side}>
             <nav className={styles.nav}>
-              <Link href='/#form' onClick={(e) => handleLinkClick(e, '#form')}>
+              <Link href='/#form' onClick={(e) => handleAnchorLink(e, '/#form')}>
                 Услуги эвакуатора
               </Link>
-              <Link
-                href='/цены/#form'
-                onClick={handlePricesLinkClick}
-              >
+              <Link href='/#form' onClick={(e) => handleAnchorLink(e, '/#form')}>
                 Цены
               </Link>
-              <Link
-                href='/#gallery'
-                onClick={(e) => handleLinkClick(e, '#gallery')}
-              >
+              <Link href='/#gallery' onClick={(e) => handleAnchorLink(e, '/#gallery')}>
                 Портфолио
               </Link>
-              <Link
-                href='/#contacts'
-                onClick={(e) => handleLinkClick(e, '#contacts')}
-              >
+              <Link href='/#contacts' onClick={(e) => handleAnchorLink(e, '/#contacts')}>
                 Контакты
-              </Link>
-              <Link href='/#blog' onClick={(e) => handleLinkClick(e, '#blog')}>
-                Блог
-              </Link>
-              <Link
-                href='/#services'
-                onClick={(e) => handleLinkClick(e, '#services')}
-              >
-                О нас
-              </Link>
-              <Link
-                href='/#contacts'
-                onClick={(e) => handleLinkClick(e, '#contacts')}
-              >
-                Тех помощь
               </Link>
             </nav>
 
-            {/* Контакты и кнопка */}
             <div className={styles.socials}>
               <a
                 href='https://t.me/avtohelp142'
@@ -189,12 +172,7 @@ export default function Header() {
                 onClick={() => sendYandexGoal('telegram')}
               >
                 <span className={styles.iconWrap}>
-                  <Image
-                    src='/icons/tg.svg'
-                    alt='Telegram'
-                    width={42}
-                    height={42}
-                  />
+                  <Image src='/icons/tg.svg' alt='Telegram' width={42} height={42} />
                 </span>
                 <span className={styles.text}>Telegram</span>
               </a>
@@ -207,19 +185,13 @@ export default function Header() {
                 onClick={() => sendYandexGoal('max')}
               >
                 <span className={styles.iconWrap}>
-                  <Image
-                    src='/icons/max.svg'
-                    alt='MAX'
-                    width={42}
-                    height={42}
-                  />
+                  <Image src='/icons/max.svg' alt='MAX' width={42} height={42} />
                 </span>
                 <span className={styles.text}>MAX</span>
               </a>
             </div>
           </div>
 
-          {/* Мобильные социальные сети - по центру */}
           <div className={styles.mobile_socials}>
             <a
               href='https://t.me/avtohelp142'
@@ -228,12 +200,7 @@ export default function Header() {
               className={styles.mobile_social_icon}
               onClick={() => sendYandexGoal('telegram')}
             >
-              <Image
-                src='/icons/tg.svg'
-                alt='Telegram'
-                width={28}
-                height={28}
-              />
+              <Image src='/icons/tg.svg' alt='Telegram' width={28} height={28} />
             </a>
             <a
               href='https://max.ru/u/f9LHodD0cOJKIJtCLzt9R39PdOR-MG1fi9sdMh9cEZzuXB-ca-EqbrqgtN4'
@@ -242,12 +209,7 @@ export default function Header() {
               className={styles.mobile_social_icon}
               onClick={() => sendYandexGoal('max')}
             >
-              <Image
-                src='/icons/max.svg'
-                alt='MAX'
-                width={28}
-                height={28}
-              />
+              <Image src='/icons/max.svg' alt='MAX' width={28} height={28} />
             </a>
           </div>
 
@@ -261,6 +223,7 @@ export default function Header() {
           </button>
         </div>
       </div>
+
       {/* Мобильное меню */}
       <div
         className={`${styles.mobileMenuOverlay} ${
@@ -288,37 +251,25 @@ export default function Header() {
             />
           </Link>
           <nav>
-            <Link href='/#form' onClick={(e) => handleLinkClick(e, '#form')}>
+            <Link href='/#form' onClick={(e) => handleAnchorLink(e, '/#form')}>
               Услуги эвакуатора
             </Link>
-            <Link href='/цены/#form' onClick={handlePricesLinkClick}>
+            <Link href='/#form' onClick={(e) => handleAnchorLink(e, '/#form')}>
               Цены
             </Link>
-            <Link
-              href='/#gallery'
-              onClick={(e) => handleLinkClick(e, '#gallery')}
-            >
+            <Link href='/#gallery' onClick={(e) => handleAnchorLink(e, '/#gallery')}>
               Портфолио
             </Link>
-            <Link
-              href='/#contacts'
-              onClick={(e) => handleLinkClick(e, '#contacts')}
-            >
+            <Link href='/#contacts' onClick={(e) => handleAnchorLink(e, '/#contacts')}>
               Контакты
             </Link>
-            <Link href='/#blog' onClick={(e) => handleLinkClick(e, '#blog')}>
+            <Link href='/#blog' onClick={(e) => handleAnchorLink(e, '/#blog')}>
               Блог
             </Link>
-            <Link
-              href='/#services'
-              onClick={(e) => handleLinkClick(e, '#services')}
-            >
+            <Link href='/#services' onClick={(e) => handleAnchorLink(e, '/#services')}>
               О нас
             </Link>
-            <Link
-              href='/#contacts'
-              onClick={(e) => handleLinkClick(e, '#contacts')}
-            >
+            <Link href='/#contacts' onClick={(e) => handleAnchorLink(e, '/#contacts')}>
               Тех помощь
             </Link>
           </nav>
@@ -340,12 +291,7 @@ export default function Header() {
                 rel='noopener noreferrer'
                 onClick={() => sendYandexGoal('telegram')}
               >
-                <Image
-                  src='/icons/tg.svg'
-                  alt='Telegram'
-                  width={24}
-                  height={24}
-                />
+                <Image src='/icons/tg.svg' alt='Telegram' width={24} height={24} />
               </a>
               <a
                 href='https://max.ru/u/f9LHodD0cOJKIJtCLzt9R39PdOR-MG1fi9sdMh9cEZzuXB-ca-EqbrqgtN4'
