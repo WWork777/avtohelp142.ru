@@ -145,12 +145,14 @@ export default function TowTruckHero() {
   return (
     <section className={styles.hero}>
       <div className={styles.container}>
-        <div className={styles.content}>
+        <div className={styles.content_desktop}>
           <div className={styles.badge}><img src="/icons/wizard.svg" alt="Arrow" width="15" height="15" /> ПОДАЧА 15 МИНУТ</div>
           
           <h1 className={styles.title}>
             ЭВАКУАТОР <br />
-            <span className={styles.highlight}>КЕМЕРОВО</span>
+            <span className={styles.title}>АВТОСЕРВИС</span>
+            <br />
+             <span className={styles.highlight}>КЕМЕРОВО</span>
           </h1>
 
           <div className={styles.featuresCard}>
@@ -186,6 +188,54 @@ export default function TowTruckHero() {
             </div>
           </form>
         </div>
+
+        <div className={styles.content_mobile}>
+          <div className={styles.badge}><img src="/icons/wizard.svg" alt="Arrow" width="15" height="15" /> ПОДАЧА 15 МИНУТ</div>
+          
+          <h1 className={styles.title}>
+            ЭВАКУАТОР <br />
+            <span className={styles.title}>АВТОСЕРВИС</span>
+            <br />
+             <span className={styles.highlight}>КЕМЕРОВО</span>
+          </h1>
+                <form className={styles.form} onSubmit={handleSubmit}>
+            <div className={styles.actions}>
+              <div className={styles.btnWrapper}>
+                <a 
+                  href="tel:+79234807070" 
+                  className={styles.btnPrimary}
+                  onClick={() => sendYandexGoal('call_clicked')}
+                >
+                  ВЫЗВАТЬ ЭВАКУАТОР <span className={styles.arrow}>→</span>
+                </a>
+                {/* <p className={styles.promo}>🔥 Запишись сейчас- диагностика бесплатно</p> */}
+              </div>
+              
+              {/* Кнопка "Рассчитать" с правильной обработкой якоря */}
+              <button 
+                type="button" 
+                className={styles.btnSecondary}
+                onClick={handleCalculateClick}
+              >
+                <img src="/icons/calc.svg" alt="Calc" width="20" height="20" />
+                Рассчитать
+              </button>
+            </div>
+          </form>
+
+          <div className={styles.featuresCard}>
+            <ul className={styles.features}>
+              <li>Удерживаем стоимость на уровне <span>~20% ниже рынка</span></li>
+              <li>Сумма фиксируется в договоре. Никаких скрытых платежей.</li>
+              <li>Подача через 15 мин. Собственный парк техники.</li>
+            </ul>
+          </div>
+
+          
+        </div>
+
+
+
 
         {/* Правая часть */}
         <div className={styles.statusCard}>
