@@ -232,7 +232,7 @@ $light-bg: #f8fafc;
     margin-bottom: 24px;
   }
   @media (max-width: 576px) {
-    grid-template-columns: 1fr;
+    // grid-template-columns: 1fr;
     gap: 10px;
     margin-bottom: 20px;
   }

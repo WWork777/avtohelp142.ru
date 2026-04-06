@@ -171,7 +171,7 @@ export default function TowTruckHero() {
                   className={styles.btnPrimary}
                   onClick={() => sendYandexGoal('call_clicked')}
                 >
-                  ВЫЗВАТЬ ЭВАКУАТОР <span className={styles.arrow}>→</span>
+                  ПОЗВОНИТЬ <span className={styles.arrow}>→</span>
                 </a>
                 {/* <p className={styles.promo}>🔥 Запишись сейчас- диагностика бесплатно</p> */}
               </div>
@@ -206,7 +206,7 @@ export default function TowTruckHero() {
                   className={styles.btnPrimary}
                   onClick={() => sendYandexGoal('call_clicked')}
                 >
-                  ВЫЗВАТЬ ЭВАКУАТОР <span className={styles.arrow}>→</span>
+                  ПОЗВОНИТЬ <span className={styles.arrow}>→</span>
                 </a>
                 {/* <p className={styles.promo}>🔥 Запишись сейчас- диагностика бесплатно</p> */}
               </div>
@@ -218,7 +218,7 @@ export default function TowTruckHero() {
                 onClick={handleCalculateClick}
               >
                 <img src="/icons/calc.svg" alt="Calc" width="20" height="20" />
-                Рассчитать
+                Рассчитать стоимость
               </button>
             </div>
           </form>

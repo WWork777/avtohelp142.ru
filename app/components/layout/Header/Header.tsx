@@ -155,12 +155,20 @@ export default function Header() {
               <Link href='/#form' onClick={(e) => handleAnchorLink(e, '/#form')}>
                 Цены
               </Link>
-              <Link href='/#gallery' onClick={(e) => handleAnchorLink(e, '/#gallery')}>
+              {/* <Link href='/#gallery' onClick={(e) => handleAnchorLink(e, '/#gallery')}>
                 Портфолио
-              </Link>
+              </Link> */}
               <Link href='/#contacts' onClick={(e) => handleAnchorLink(e, '/#contacts')}>
                 Контакты
               </Link>
+              <Link 
+              href={`tel:${phone}`} 
+              className={styles.mobilePhone}
+              onClick={() => sendYandexGoal('telephone')}
+            >
+              <span>{phone}</span>
+            </Link>
+
             </nav>
 
             <div className={styles.socials}>
@@ -193,7 +201,15 @@ export default function Header() {
           </div>
 
           <div className={styles.mobile_socials}>
-            <a
+
+            <Link 
+              href={`tel:${phone}`} 
+              className={styles.mobilePhone1}
+              onClick={() => sendYandexGoal('telephone')}
+            >
+              <span>{phone}</span>
+            </Link>
+            {/* <a
               href='https://t.me/avtohelp142'
               target='_blank'
               rel='noopener noreferrer'
@@ -210,7 +226,7 @@ export default function Header() {
               onClick={() => sendYandexGoal('max')}
             >
               <Image src='/icons/max.svg' alt='MAX' width={28} height={28} />
-            </a>
+            </a> */}
           </div>
 
           <button
