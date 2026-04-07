@@ -146,7 +146,7 @@ export default function TowTruckHero() {
     <section className={styles.hero}>
       <div className={styles.container}>
         <div className={styles.content_desktop}>
-          <div className={styles.badge}><img src="/icons/wizard.svg" alt="Arrow" width="15" height="15" /> ПОДАЧА 15 МИНУТ</div>
+          <div className={styles.badge}><img src="/icons/wizard.svg" alt="Arrow" width="15" height="15" /> КРУГЛОСУТОЧНО 24/7</div>
           
           <h1 className={styles.title}>
             ЭВАКУАТОР <br />
@@ -273,7 +273,7 @@ export default function TowTruckHero() {
           />
           <div className={styles.infoFooter}>
             <img src="/icons/inform.svg" alt="Info" width="20" height="20" />
-            <p>Работаем во всех округах Кемерово. Принимаем карты, наличные и переводы.</p>
+            <p>Работаем во всех округах Кемерово. Принимаем карты, наличные и переводы. Работаем с юр. лицами: безналичный расчёт, договор, отчётные документы (в т.ч. для страховых).</p>
           </div>
         </div>
       </div>
@@ -289,12 +289,12 @@ export default function TowTruckHero() {
       <a
         href="tel:+79234807070" 
         onClick={(e) => handleExternalLink(e, 'call_clicked', 'tel:+79234807070')}
-        className={styles.floating_button2}
+        className={`${styles.floating_button2} ${styles.floating_button_text_phone}`} 
         target="_blank"
         rel="noopener noreferrer"
       >
         <Image src="icons/phone.svg" width="20" height="20" alt="phone"/>
-        <span className={styles.floating_button_text}>Звонок</span>
+        <span className={`${styles.floating_button_text} `} >Звонок</span>
       </a>
     </section>
   );

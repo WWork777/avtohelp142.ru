@@ -443,3 +443,53 @@ max-width: 30%;
     gap: 8px;
   }
 }
+
+
+/* === Основной класс кнопки === */
+.floating_button_text_phone { 
+  background: $yellow; /* Или пропишите код цвета: #FFC40E */
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  
+  /* Плавность для ховера */
+  transition: transform 0.2s, box-shadow 0.3s ease;
+  
+  /* === Включаем анимацию === */
+  animation: luxuryGlow 3s ease-in-out infinite;
+  
+  /* === Техническое: помогает анимации работать плавно === */
+  will-change: box-shadow;
+  transform: translateZ(0);
+  
+  /* Начальное состояние тени */
+  box-shadow: 0 4px 20px rgba(255, 196, 14, 0.25);
+}
+
+/* === Состояние при наведении === */
+.floating_button_text_phone:hover { 
+  transform: translateY(-2px); 
+  /* Останавливаем анимацию, чтобы кнопка не "пульсировала", пока на неё смотрят */
+  animation-play-state: paused; 
+  /* Фиксируем красивое свечение */
+  box-shadow: 
+    0 10px 35px rgba(255, 196, 14, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+/* === Ключевые кадры (вынесено наружу для совместимости) === */
+@keyframes luxuryGlow {
+  0%, 100% {
+    /* Спокойное состояние: мягкая тень + едва заметный контур */
+    box-shadow: 
+      0 4px 20px rgba(255, 196, 14, 0.25),
+      0 0 0 0 rgba(255, 196, 14, 0.15);
+  }
+  50% {
+    /* Пик пульсации: тень расширяется, контур становится видимым */
+    box-shadow: 
+      0 8px 30px rgba(255, 196, 14, 0.4),
+      0 0 0 6px rgba(255, 196, 14, 0.1);
+  }
+}
+
